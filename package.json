@@ -1,0 +1,12 @@
+{
+  "name": "holzi",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.33.2",
+  "scripts": {
+    "dev:frontend": "pnpm --filter @holzi/frontend dev",
+    "dev:webview": "pnpm --filter @holzi/webview dev",
+    "build:frontend": "pnpm --filter @holzi/frontend build",
+    "build:vscode": "pnpm --filter @holzi/webview generate && pnpm --filter @holzi/extension build"
+  }
+}
