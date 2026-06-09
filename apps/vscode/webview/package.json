@@ -1,0 +1,17 @@
+{
+  "name": "@holzi/webview",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@holzi/ui": "workspace:*",
+    "nuxt": "^4.4.6",
+    "vue": "^3.5.34",
+    "vue-router": "^5.0.7"
+  }
+}
