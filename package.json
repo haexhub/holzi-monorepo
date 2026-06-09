@@ -1,5 +1,5 @@
 {
-  "name": "holzi",
+  "name": "holzi-monorepo",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@10.33.2",
@@ -7,6 +7,10 @@
     "dev:frontend": "pnpm --filter @holzi/frontend dev",
     "dev:webview": "pnpm --filter @holzi/webview dev",
     "build:frontend": "pnpm --filter @holzi/frontend build",
-    "build:vscode": "pnpm --filter @holzi/webview generate && pnpm --filter @holzi/extension build"
+    "build:webview": "pnpm --filter @holzi/webview generate",
+    "build:extension": "pnpm --filter holzi build",
+    "build:vscode": "pnpm run build:webview && pnpm run build:extension",
+    "build": "pnpm run build:frontend && pnpm run build:vscode",
+    "package:vscode": "pnpm run build:vscode && pnpm --filter holzi package"
   }
 }

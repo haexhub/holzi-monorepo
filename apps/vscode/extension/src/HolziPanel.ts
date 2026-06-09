@@ -1,4 +1,6 @@
 import * as vscode from 'vscode'
+import * as path from 'path'
+import * as fs from 'fs'
 import { getToken, getHost } from './config'
 
 const VIEW_TYPE = 'holziChat'
@@ -59,10 +61,48 @@ export class HolziPanel {
   }
 
   private _buildHtml(context: vscode.ExtensionContext): string {
-    // Task 9 implements proper Nuxt-output rewriting with CSP + nonce + asWebviewUri.
-    return `<!DOCTYPE html>
-<html><head><title>Holzi</title></head>
-<body><p>Webview HTML loader — Task 9 wires this up.</p></body>
-</html>`
+    const webview = this.panel.webview
+
+    // Random nonce per panel load — required for CSP script-src
+    const nonce = Array.from({ length: 32 }, () =>
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'[Math.floor(Math.random() * 62)],
+    ).join('')
+
+    const htmlPath = path.join(context.extensionPath, 'out', 'webview', 'index.html')
+    let html = fs.readFileSync(htmlPath, 'utf-8')
+
+    // Rewrite any URL that points into the static asset dir to a webview URI.
+    // Nuxt may emit absolute (/_nuxt/...) or relative (./_nuxt/...) paths
+    // depending on app.baseURL.
+    html = html.replace(/(src|href)="(\.?\/_nuxt\/[^"]+)"/g, (_match, attr, raw: string) => {
+      const file = raw.replace(/^\.?\//, '')
+      const parts = file.split('/')
+      const uri = webview.asWebviewUri(
+        vscode.Uri.joinPath(context.extensionUri, 'out', 'webview', ...parts),
+      )
+      return `${attr}="${uri}"`
+    })
+
+    // Add nonce to all <script> tags
+    html = html.replace(/<script(\s|>)/g, `<script nonce="${nonce}"$1`)
+
+    // CSP — strip any existing CSP meta, then inject ours
+    html = html.replace(/<meta http-equiv="Content-Security-Policy"[^>]*>/g, '')
+
+    // connect-src is intentionally permissive (https: wss:) because the host
+    // is only known after the webview receives its config from the extension.
+    // If stricter policy is needed later, we can rebuild HTML on config change.
+    const csp = [
+      `default-src 'none'`,
+      `style-src ${webview.cspSource} 'unsafe-inline'`,
+      `script-src 'nonce-${nonce}'`,
+      `font-src ${webview.cspSource} data:`,
+      `img-src ${webview.cspSource} data: https:`,
+      `connect-src https: wss:`,
+    ].join('; ')
+
+    html = html.replace('<head>', `<head>\n  <meta http-equiv="Content-Security-Policy" content="${csp}">`)
+
+    return html
   }
 }
