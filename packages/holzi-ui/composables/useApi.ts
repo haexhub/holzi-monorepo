@@ -31,7 +31,7 @@ export function useApi() {
       // request paths are dynamic anyway.
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const f = $fetch as any
-      return (await f(path, {
+      return (await f(`${auth.baseUrl}${path}`, {
         method: options.method,
         body: options.body,
         query: options.query,

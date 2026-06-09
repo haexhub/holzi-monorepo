@@ -194,7 +194,7 @@ async function postChatStream(
     throw new Error('not authenticated')
   }
 
-  const response = await fetch(url, {
+  const response = await fetch(`${auth.baseUrl}${url}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -349,7 +349,7 @@ export async function cancelChatRun(runId: string): Promise<void> {
       statusCode: 401,
     })
   }
-  const response = await fetch(`/api/chat/runs/${encodeURIComponent(runId)}/cancel`, {
+  const response = await fetch(`${auth.baseUrl}/api/chat/runs/${encodeURIComponent(runId)}/cancel`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${auth.token}`,
@@ -411,7 +411,7 @@ export async function resolveApproval(
     })
   }
   const response = await fetch(
-    `/api/approvals/${encodeURIComponent(approvalId)}`,
+    `${auth.baseUrl}/api/approvals/${encodeURIComponent(approvalId)}`,
     {
       method: 'POST',
       headers: {
