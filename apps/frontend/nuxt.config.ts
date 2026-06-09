@@ -1,5 +1,3 @@
-import tailwindcss from '@tailwindcss/vite'
-
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   extends: ['../../packages/holzi-ui'],
@@ -8,12 +6,6 @@ export default defineNuxtConfig({
 
   // SPA — no SSR. The hermes-server serves the built dist/ statically.
   ssr: false,
-
-  css: ['~/assets/css/tailwind.css', 'katex/dist/katex.min.css'],
-
-  vite: {
-    plugins: [tailwindcss()],
-  },
 
   devServer: {
     port: 3001,

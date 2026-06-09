@@ -1,3 +1,9 @@
+import { fileURLToPath } from 'node:url'
+import { dirname, join } from 'node:path'
+import tailwindcss from '@tailwindcss/vite'
+
+const currentDir = dirname(fileURLToPath(import.meta.url))
+
 export default defineNuxtConfig({
   modules: ['@pinia/nuxt', '@vueuse/nuxt', '@nuxtjs/i18n'],
 
@@ -22,5 +28,11 @@ export default defineNuxtConfig({
       cookieKey: 'i18n_locale',
       redirectOn: 'root',
     },
+  },
+
+  css: [join(currentDir, 'assets/css/tailwind.css'), 'katex/dist/katex.min.css'],
+
+  vite: {
+    plugins: [tailwindcss()],
   },
 })
