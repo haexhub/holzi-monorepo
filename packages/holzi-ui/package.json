@@ -4,6 +4,8 @@
   "type": "module",
   "main": "./nuxt.config.ts",
   "dependencies": {
+    "@shikijs/markdown-it": "^4.1.0",
+    "@vscode/markdown-it-katex": "^1.1.2",
     "@vueuse/core": "^14.3.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -16,6 +18,7 @@
     "pinia": "^3.0.4",
     "reka-ui": "^2.9.8",
     "tailwind-merge": "^3.6.0",
-    "vue": "^3.5.34"
+    "vue": "^3.5.34",
+    "vue-sonner": "^2.0.9"
   }
 }

@@ -15,4 +15,7 @@ export default defineNuxtConfig({
       global: true,
     },
   ],
+  imports: {
+    dirs: ['utils', 'composables'],
+  },
 })
