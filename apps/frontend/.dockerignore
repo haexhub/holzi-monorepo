@@ -1,0 +1,14 @@
+node_modules
+.output
+.nuxt
+.git
+.gitignore
+.github
+.vscode
+.idea
+tests
+coverage
+*.log
+.env
+.env.*
+README.md

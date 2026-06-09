@@ -1,0 +1,1110 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "loading": "Loading…",
+    "error": "Error",
+    "retry": "Retry",
+    "confirm": "Confirm",
+    "back": "Back",
+    "reload": "Reload",
+    "refresh": "Refresh",
+    "ok": "OK"
+  },
+  "nav": {
+    "preferences": { "label": "Preferences" },
+    "llm": { "label": "LLM" },
+    "memory": { "label": "Memory" },
+    "tasks": { "label": "Tasks" },
+    "workspaces": { "label": "Workspaces" },
+    "skills": { "label": "Skills & Tools" },
+    "diagnostics": { "label": "Diagnostics" },
+    "insights": { "label": "Insights" },
+    "logs": { "label": "Logs" },
+    "aria": {
+      "desktop": "Control Center (desktop)",
+      "mobile": "Control Center (mobile)"
+    }
+  },
+  "components": {
+    "themeToggle": {
+      "toLight": "Light mode",
+      "toDark": "Dark mode"
+    },
+    "reasoningCard": {
+      "title": "Reasoning",
+      "thinking": "Thinking…"
+    },
+    "emptyChatState": {
+      "welcome": {
+        "title": "Welcome to Hermes",
+        "body": "Before you can chat, you need LLM credentials. Add an API key or connect your Claude account via OAuth.",
+        "cta": "Set up credentials"
+      },
+      "hello": "Say hi to Hermes.",
+      "banner": {
+        "title": "Setup incomplete",
+        "findingSingular": "subsystem reports",
+        "findingPlural": "subsystems report",
+        "suffix": "warnings or errors."
+      }
+    },
+    "toolCallCard": {
+      "status": {
+        "running": "Running…",
+        "success": "Success",
+        "error": "Error"
+      },
+      "arguments": "Arguments",
+      "result": "Result"
+    },
+    "subagentCard": {
+      "label": "Subagent",
+      "status": {
+        "running": "Running…",
+        "success": "Done",
+        "error": "Error"
+      },
+      "task": "Task",
+      "output": "Output"
+    },
+    "attachmentChip": {
+      "removeSuffix": "remove"
+    },
+    "chatComposer": {
+      "dropHere": "Drop files here",
+      "attachAria": "Attach file",
+      "placeholder": {
+        "default": "Message Hermes…  (Enter = send, Shift+Enter = newline)",
+        "queue": "Type the next message…  (sent after the current reply)"
+      },
+      "stop": {
+        "ready": "Cancel response",
+        "preparing": "Response is starting up…"
+      },
+      "send": {
+        "now": "Send",
+        "queue": "Queue"
+      }
+    },
+    "conversationList": {
+      "title": "Conversations",
+      "new": "New",
+      "searchPlaceholder": "Search…",
+      "searchAria": "Search conversations",
+      "clearSearch": "Clear search",
+      "empty": {
+        "noMatches": "No matches.",
+        "none": "No conversations."
+      },
+      "msgSuffix": "msgs",
+      "expiresSoon": "Expiring soon",
+      "expiresInDays": "Expires in {days} day(s)",
+      "bookmark": {
+        "add": "Add bookmark",
+        "remove": "Remove bookmark"
+      },
+      "rename": {
+        "titleAria": "Conversation title",
+        "saveAria": "Save title",
+        "cancelAria": "Cancel rename"
+      },
+      "row": {
+        "renameAria": "Rename {title}",
+        "deleteAria": "Delete {title}"
+      },
+      "deleteConfirm": {
+        "title": "Delete conversation?",
+        "description": "\"{title}\" will be permanently deleted."
+      }
+    },
+    "sandboxCrashCard": {
+      "title": "Sandbox crashed",
+      "workspaceLabel": "Workspace:",
+      "exitCodeLabel": "Exit code:",
+      "restart": "Restart",
+      "restarting": "Restarting…",
+      "state": {
+        "oom": "Out of memory (OOM)",
+        "removed": "Sandbox removed",
+        "crashed": "Crashed"
+      }
+    },
+    "chatMessage": {
+      "edit": {
+        "aria": "Edit message",
+        "hint": "Later messages will be regenerated.",
+        "saveAndRegen": "Save & regenerate"
+      },
+      "retry": {
+        "aria": "Regenerate response",
+        "label": "Regenerate"
+      }
+    },
+    "mcpInstallApprovalDetails": {
+      "envLabel": "env:",
+      "credentialsLabel": "Credentials:",
+      "credentialsHidden": "set (hidden)"
+    },
+    "approvalCard": {
+      "title": "Approval required",
+      "toolLabel": "Tool:",
+      "details": "Details",
+      "arguments": "Arguments",
+      "withReason": "Add a reason",
+      "reasonLabel": "Reason (optional)",
+      "reasonPlaceholder": "Why? (max. 500 chars) — passed to the model on deny",
+      "verdict": {
+        "allowed": "Allowed",
+        "denied": "Denied"
+      },
+      "actions": {
+        "deny": "Deny",
+        "allowOnce": "Allow once",
+        "allowSession": "Allow this session",
+        "allowAlways": "Always allow"
+      }
+    },
+    "workspacePanel": {
+      "title": "Workspace",
+      "newFileAria": "New file",
+      "noWorkspaces": "No workspaces created.",
+      "createInControlCenter": "Create one in the Control Center",
+      "tabs": {
+        "files": "Files",
+        "git": "Git"
+      },
+      "dirty": "dirty",
+      "clean": "clean",
+      "dirtyTitle": "{count} changed file(s) — open the Git tab",
+      "createLabel": "New file (relative path):",
+      "createPlaceholder": "src/new.py",
+      "createSubmit": "Create",
+      "noConversation": "Select a conversation to edit files.",
+      "emptyFolder": "Folder is empty.",
+      "selectFile": "Select a file…",
+      "renameAria": "Rename",
+      "truncated": "Preview truncated — file is larger than 256 KiB.",
+      "saving": "Saving…",
+      "binaryPreview": "Preview not available (binary file).",
+      "sizeUnknown": "size unknown",
+      "rename": {
+        "title": "Rename file",
+        "description": "New path (relative to the workspace root):",
+        "confirm": "Rename"
+      },
+      "delete": {
+        "title": "Delete file?",
+        "description": "\"{path}\" will be permanently deleted."
+      },
+      "notices": {
+        "savedNoCommit": "Saved (no Git repo, no commit created)."
+      },
+      "errors": {
+        "rootsLoad": "Failed to load workspaces.",
+        "unavailable": "Workspace unavailable — sandbox not running or not configured.",
+        "pathNotFound": "Path not found.",
+        "invalidPath": "Invalid path.",
+        "treeLoad": "Failed to load the directory.",
+        "fileNotFound": "File not found.",
+        "fileLoad": "Failed to load the file.",
+        "sandboxUnavailable": "Sandbox unavailable.",
+        "gitUnavailable": "Git status unavailable.",
+        "saveConflict": "Conflict: the file changed on disk. Please reload and edit again.",
+        "invalidContent": "Invalid content.",
+        "workspaceUnavailable": "Workspace unavailable.",
+        "saveFailed": "Save failed.",
+        "pathEmpty": "Path must not be empty.",
+        "pathExists": "Path already exists.",
+        "createFailed": "Create failed.",
+        "destExists": "Target path already exists.",
+        "renameFailed": "Rename failed.",
+        "deleteFailed": "Delete failed."
+      }
+    },
+    "workspaceGitTab": {
+      "createBranchOption": "+ Create new branch…",
+      "detached": "(detached)",
+      "noRepo": "No Git repo in this workspace.",
+      "workingTreeClean": "Working tree clean.",
+      "sections": {
+        "unstaged": "Unstaged ({count})",
+        "staged": "Staged ({count})"
+      },
+      "stageAria": "Stage",
+      "unstageAria": "Unstage",
+      "discardAria": "Discard",
+      "diffSelectPrompt": "Select a file for the diff…",
+      "filesLabel": "file(s)",
+      "noChanges": "No changes.",
+      "binary": "Binary file — no patch available.",
+      "patchTruncated": "Patch truncated — diff is larger than 256 KiB.",
+      "commitPlaceholder": "Commit message…",
+      "commitBusy": "Commit…",
+      "commitButton": "Commit (staged)",
+      "commitNoConversation": "Select a conversation to commit.",
+      "commitNeedsStaged": "Stage files first, then commit.",
+      "fetch": "Fetch",
+      "pull": "Pull",
+      "push": "Push",
+      "pushUpstream": "Push --set-upstream",
+      "pullConflicts": "Resolve conflicts manually:",
+      "createBranch": {
+        "title": "Create new branch",
+        "description": "Name of the new branch",
+        "placeholder": "feature/x"
+      },
+      "toasts": {
+        "staged": "File staged.",
+        "unstaged": "File unstaged.",
+        "discarded": "Local changes discarded.",
+        "committed": "Commit created.",
+        "branchCreated": "Branch \"{branch}\" created.",
+        "branchSwitched": "Switched to \"{branch}\".",
+        "fetchOk": "Fetch successful.",
+        "pullOk": "Pull successful.",
+        "pushOk": "Push successful.",
+        "needConversation": "Please select a conversation first.",
+        "needCommitMessage": "Please enter a commit message."
+      },
+      "errors": {
+        "statusLoad": "Failed to load Git status.",
+        "branchesLoad": "Failed to load branches.",
+        "diffLoad": "Failed to load the diff.",
+        "discardDisabled": "Destructive Git operations are disabled server-side (HERMES_WORKSPACE_GIT_DESTRUCTIVE).",
+        "discardFailed": "Discard failed.",
+        "opFailed": "Action failed.",
+        "commitFailed": "Commit failed.",
+        "checkoutConflict": "Working tree has uncommitted changes — commit/discard/stash first, then try again.",
+        "checkoutFailed": "Checkout failed.",
+        "fetchFailed": "Fetch failed.",
+        "fetchFailedDetail": "Fetch failed: {message}",
+        "pullFailed": "Pull failed.",
+        "pushFailed": "Push failed.",
+        "pushFailedDetail": "Push failed: {message}"
+      }
+    },
+    "skillsSection": {
+      "title": "Skills",
+      "introBefore": "Reusable prompt building blocks. Personas activate individual skills on the ",
+      "preferencesLink": "Preferences page",
+      "introAfter": ".",
+      "securityBefore": "Skill content flows into every system prompt of the activating personas and is therefore visible in ",
+      "securityMid": " and ",
+      "securityAfter": " — do not paste API keys or secrets here.",
+      "searchPlaceholder": "Search…",
+      "searchAria": "Search skills",
+      "newSkill": "New skill",
+      "noMatch": "No matches for \"{query}\".",
+      "empty": "No skills yet.",
+      "detailEmptyTitle": "Select a skill",
+      "emptyTitle": "Select a skill",
+      "emptyHint": "Pick a skill from the list or create a new one.",
+      "fields": {
+        "description": "Description",
+        "whenToUse": "When to use"
+      },
+      "form": {
+        "slug": "Slug",
+        "slugPlaceholder": "e.g. code-style-typescript",
+        "name": "Name",
+        "namePlaceholder": "e.g. Code Style TypeScript",
+        "description": "Description (short)",
+        "descriptionPlaceholder": "e.g. Style guidelines for TypeScript reviews",
+        "whenToUse": "When to use? (optional)",
+        "whenToUsePlaceholder": "e.g. During TypeScript code reviews",
+        "body": "Body (Markdown)",
+        "length": "{count} / {max} characters",
+        "lengthWarn": "— long body, composition gets large"
+      },
+      "deleteConfirm": {
+        "title": "Delete skill?",
+        "description": "\"{name}\" will be permanently deleted. Personas that activated this skill lose it automatically."
+      },
+      "toasts": {
+        "created": "Skill created.",
+        "saved": "Skill saved.",
+        "deleted": "Skill deleted."
+      },
+      "errors": {
+        "nameRequired": "Name is required.",
+        "descriptionRequired": "Description is required.",
+        "bodyRequired": "Body must not be empty.",
+        "bodyTooLong": "Body may be at most {max} characters long.",
+        "slugInvalid": "Slug must be kebab-case (a-z0-9, optional hyphens, 1–64 chars).",
+        "save": "Failed to save.",
+        "delete": "Failed to delete."
+      }
+    },
+    "mcpServersSection": {
+      "title": "Register MCP server",
+      "subtitle": "External MCP servers bring additional tools. They run with Holzi's permissions — only install trusted sources.",
+      "newServer": "New server",
+      "empty": "No MCP servers configured.",
+      "emptyCta": "+ New server",
+      "restart": "Restart",
+      "enable": "Enable",
+      "disable": "Disable",
+      "crashDetails": "Crash details",
+      "envLabel": "env:",
+      "status": {
+        "starting": "starting",
+        "ready": "ready",
+        "crashed": "error",
+        "disabled": "disabled",
+        "unknown": "unknown"
+      },
+      "form": {
+        "createTitle": "New MCP server",
+        "editTitle": "Edit MCP server",
+        "closeAria": "Close form",
+        "slug": "Slug",
+        "slugLockedHint": "The slug isn't changed — it's part of every tool name.",
+        "slugInvalidHint": "kebab-case, 2–32 chars, no leading/trailing hyphen",
+        "displayName": "Display name",
+        "transport": "Transport",
+        "transportHttp": "HTTP (StreamableHTTP)",
+        "transportStdio": "stdio (local subprocess)",
+        "transportLockedHint": "Transport isn't switched on edit — create a new server if you need that.",
+        "url": "URL",
+        "credentials": "Bearer token / API key",
+        "optional": "(optional)",
+        "credentialsPlaceholderEdit": "Leave empty to keep the stored value",
+        "reveal": "show",
+        "hide": "hide",
+        "clearCredential": "Remove stored token",
+        "command": "Command",
+        "arguments": "Arguments",
+        "removeArg": "Remove argument",
+        "addArg": "Argument",
+        "envVars": "Environment Variables",
+        "removeEnv": "Remove variable",
+        "addEnv": "Variable",
+        "envHint": "Values are overwritten on save. Leaving empty means: empty string.",
+        "submitCreate": "Create"
+      },
+      "deleteConfirm": {
+        "title": "Delete {name}?",
+        "description": "The server is removed. Tools disappear from the catalog immediately.",
+        "confirm": "Delete"
+      },
+      "toasts": {
+        "created": "MCP server created.",
+        "updated": "MCP server updated.",
+        "deleted": "MCP server deleted.",
+        "restarted": "{name} restarted.",
+        "restartFailed": "Restart failed: {error}"
+      },
+      "errors": {
+        "displayNameRequired": "Display name missing.",
+        "slugInvalid": "Invalid slug — only a-z, 0-9 and hyphens, 2–32 chars, no leading or trailing hyphen.",
+        "urlRequired": "URL missing.",
+        "commandRequired": "Command missing.",
+        "unknown": "Unknown error."
+      }
+    },
+    "notesPanel": {
+      "title": "Notes",
+      "empty": "No notes yet.",
+      "keyPlaceholder": "key (e.g. project.holzi.status)",
+      "contentPlaceholder": "content"
+    },
+    "modelSelect": {
+      "needsCredential": "Activate a credential first",
+      "loading": "Loading models…",
+      "error": "Failed to load",
+      "empty": "No models available",
+      "placeholder": "Pick a model",
+      "useDefault": "— Use credential's default —",
+      "searchPlaceholder": "Search model…",
+      "noMatch": "No matches."
+    },
+    "chatHub": {
+      "header": {
+        "newChat": "New chat",
+        "conversation": "Conversation #{id}",
+        "settings": "Settings",
+        "logout": "Logout"
+      },
+      "aria": {
+        "leftSidebar": "Conversations",
+        "rightSidebar": "Notes & Workspace",
+        "toggleLeft": {
+          "show": "Show conversations",
+          "hide": "Hide conversations"
+        },
+        "toggleRight": {
+          "show": "Show Notes & Workspace",
+          "hide": "Hide Notes & Workspace"
+        },
+        "dismissError": "Dismiss error"
+      },
+      "reasoning": {
+        "collapseDefault": "Collapse reasoning by default",
+        "showDefault": "Show reasoning by default"
+      },
+      "panel": {
+        "notes": "Notes",
+        "workspace": "Workspace"
+      },
+      "queue": {
+        "streaming": "Queued…",
+        "waiting": "Pending — not sent",
+        "sendNow": "Send queue now"
+      },
+      "cancelled": "Response cancelled.",
+      "errors": {
+        "loadConversations": "Failed to load.",
+        "loadConversation": "Failed to load.",
+        "bookmark": "Bookmark failed.",
+        "rename": "Rename failed.",
+        "delete": "Delete failed."
+      },
+      "upload": {
+        "tooLarge": "File too large (max. 25 MB).",
+        "unsupportedType": "File type not supported.",
+        "failedWithDetail": "Upload failed: {detail}",
+        "failed": "Upload failed."
+      },
+      "sandbox": {
+        "restartFailedWithDetail": "Sandbox restart failed: {detail}",
+        "restartFailed": "Sandbox restart failed. Please try again."
+      },
+      "contextPill": {
+        "aria": "Active persona and model",
+        "overrideActive": "Override active — applies to next turn only",
+        "clearOverride": "Clear override",
+        "personaLabel": "Persona",
+        "modelLabel": "Model",
+        "modelPlaceholder": "e.g. claude-opus-4-8",
+        "apply": "Apply"
+      },
+      "commandPicker": {
+        "trigger": "Commands",
+        "sections": {
+          "model": "Model",
+          "persona": "Persona",
+          "thinkingEffort": "Thinking Effort",
+          "skills": "Skills (this turn)",
+          "actions": "Actions"
+        },
+        "thinkingEffort": {
+          "none": "Off",
+          "low": "Low (~1k tokens)",
+          "medium": "Medium (~5k tokens)",
+          "high": "High (~16k tokens)"
+        },
+        "clearConversation": "Clear conversation",
+        "noModels": "No models available"
+      },
+      "composerToolbar": {
+        "attach": "Attach file",
+        "commands": "Commands",
+        "clearOverride": "Clear override"
+      }
+    }
+  },
+  "errors": {
+    "GENERIC": "Something went wrong.",
+    "NETWORK": "Connection failed.",
+    "UNKNOWN": "Unknown error.",
+    "INVALID_REQUEST": "Invalid request: {message}",
+    "REQUEST_INVALID_JSON": "Request body is not valid JSON.",
+    "REQUEST_INVALID_OFFSET": "Offset must be ≥ 0.",
+    "REQUEST_LIMIT_OUT_OF_RANGE": "Limit must be between {min} and {max}.",
+    "REQUEST_INVALID_STATUS": "Status must be one of {allowed}.",
+    "REQUEST_INVALID_PERIOD": "Period must be one of {allowed}.",
+    "REQUEST_INVALID_MIN_LEVEL": "Min level must be one of {allowed}.",
+    "REQUEST_TAIL_OUT_OF_RANGE": "Tail must be between 1 and {max}.",
+    "CHAT_INVALID_SESSION": "Invalid session header.",
+    "CHAT_SESSION_NOT_FOUND": "Unknown session.",
+    "CHAT_UPSTREAM_TIMEOUT": "The LLM provider took too long.",
+    "CHAT_UPSTREAM_UNREACHABLE": "The LLM provider is unreachable.",
+    "CHAT_UPSTREAM_NON_JSON": "The LLM provider returned a non-JSON body.",
+    "CHAT_UPSTREAM_ERROR": "LLM provider returned an error: {message}",
+    "CONVERSATION_NOT_FOUND": "Conversation not found.",
+    "CONVERSATION_NOT_WEB": "This conversation cannot be continued here.",
+    "CONVERSATION_TITLE_BLANK": "Title must not be blank.",
+    "CONVERSATION_NO_USER_MESSAGE_TO_RETRY": "This conversation has no user message to retry.",
+    "MESSAGE_NOT_FOUND": "Message not found.",
+    "MESSAGE_ONLY_USER_EDITABLE": "Only your own messages can be edited.",
+    "ATTACHMENT_REQUIRES_CONVERSATION": "Attachments require an existing conversation.",
+    "ATTACHMENT_UNKNOWN_IDS": "At least one attachment is unknown or does not belong to this conversation.",
+    "ATTACHMENT_UNSUPPORTED_TYPE": "Unsupported file type: {type}",
+    "ATTACHMENT_TOO_LARGE": "File too large (max {max_bytes} bytes).",
+    "RUN_NOT_FOUND": "Run not found.",
+    "APPROVAL_NOT_FOUND": "Approval request not found.",
+    "APPROVAL_ALREADY_RESOLVED": "Approval has already been answered.",
+    "TOOL_NOT_IN_ALWAYS_ALLOWED": "Tool is not on the always-allow list.",
+    "TOOL_NOT_IN_SESSION_ALLOWED": "Tool is not on the session-allow list.",
+    "NOTE_NOT_FOUND": "Note not found.",
+    "TASK_NOT_FOUND": "Task not found.",
+    "TASK_DUE_OR_SCHEDULE_REQUIRED": "Exactly one of due_at / schedule must be set.",
+    "TASK_UNKNOWN_TIMEZONE": "Unknown timezone: {tz}",
+    "TASK_SCHEDULER_NOT_CONFIGURED": "Scheduler not configured.",
+    "SANDBOX_NOT_CONFIGURED": "Sandbox runtime not configured.",
+    "LLM_CREDENTIAL_NOT_FOUND": "Credential not found.",
+    "LLM_CREDENTIAL_VANISHED": "Credential disappeared mid-operation.",
+    "LLM_OAUTH_PENDING": "OAuth flow still open.",
+    "LLM_OAUTH_NOT_AUTHORIZED": "OAuth credential is in state '{state}' — please complete the OAuth flow before activating it.",
+    "LLM_OAUTH_NOT_PENDING": "OAuth flow is in state '{state}', not 'pending'.",
+    "LLM_OAUTH_FLOW_NOT_FOUND": "OAuth flow not found.",
+    "LLM_OAUTH_NO_CREDENTIALS": "claude CLI did not write a credentials file.",
+    "LLM_OAUTH_START_FAILED": "OAuth start failed: {message}",
+    "LLM_OAUTH_CODE_REJECTED": "Verification code rejected: {message}",
+    "LLM_PROVIDER_FAILED": "Provider request failed: {message}",
+    "MCP_MANAGER_NOT_INITIALISED": "MCP server manager not initialised.",
+    "MCP_SERVER_NOT_FOUND": "MCP server not found.",
+    "MCP_SERVER_NAME_CONFLICT": "MCP server name '{name}' already exists.",
+    "MCP_SERVER_INVALID_NAME": "Name must be kebab-case (a-z, 0-9, -), 2–32 characters, no leading or trailing dash.",
+    "MCP_HTTP_REQUIRES_URL": "HTTP transport requires a URL.",
+    "MCP_HTTP_FORBIDS_COMMAND": "HTTP transport must not set a command.",
+    "MCP_HTTP_FORBIDS_ENV": "HTTP transport must not set env.",
+    "MCP_STDIO_REQUIRES_COMMAND": "Stdio transport requires a command.",
+    "MCP_STDIO_FORBIDS_URL": "Stdio transport must not set a URL.",
+    "SKILL_INVALID_SLUG": "Slug must be kebab-case (a-z, 0-9, -), 1–64 characters, no leading or trailing dash.",
+    "SKILL_SLUG_CONFLICT": "Skill slug '{slug}' already exists.",
+    "SKILL_NOT_FOUND": "Skill not found.",
+    "PERSONA_NOT_FOUND": "Persona not found.",
+    "PERSONA_NAME_CONFLICT": "Persona name '{name}' already exists.",
+    "PERSONA_DEFAULT_DEMOTE": "Cannot demote the default persona — pick another persona as default first.",
+    "PERSONA_DEFAULT_DELETE": "Cannot delete the default persona — pick another persona as default first.",
+    "PERSONA_REF_INVALID": "Persona {id} does not exist.",
+    "PERSONA_SKILL_ACTIVATION_INVALID": "Invalid skill activation list: unknown skill_id or duplicate entry.",
+    "PERSONA_FRAGMENTS_ALL_EMPTY": "At least one of the three persona fragments (Soul, Identity, or Agents) must have content.",
+    "PERSONA_HISTORY_NOT_FOUND": "That history entry no longer exists.",
+    "PERSONA_HISTORY_PERSONA_MISMATCH": "That history entry belongs to a different persona.",
+    "PERSONA_NO_CREDENTIAL": "No LLM credential configured. Add an API key under Settings → LLM.",
+    "PERSONA_INVALID_CREDENTIAL": "Credential {id} does not exist.",
+    "PERSONA_INVALID_MODEL": "Model '{model}' is not available for this credential.",
+    "CHANNEL_NOT_FOUND": "Unknown channel: {channel}",
+    "CHANNEL_ROW_MISSING": "Channel row missing: {channel}",
+    "WORKSPACE_NOT_FOUND": "Workspace not found.",
+    "WORKSPACE_ROOT_NOT_FOUND": "Unknown workspace root.",
+    "WORKSPACE_ALREADY_EXISTS": "Workspace already exists.",
+    "WORKSPACE_SANDBOX_NOT_RUNNING": "Workspace sandbox is not running.",
+    "WORKSPACE_INVALID_PATH": "Invalid path.",
+    "WORKSPACE_PATH_NOT_FOUND": "Path not found.",
+    "WORKSPACE_PATH_EXISTS": "Path already exists.",
+    "WORKSPACE_PATH_IS_DIRECTORY": "Path is a directory.",
+    "WORKSPACE_PATH_IS_DIRECTORY_USE_TREE": "Path is a directory — use /tree.",
+    "WORKSPACE_PATH_NOT_DIRECTORY": "Path is not a directory.",
+    "WORKSPACE_PATH_NOT_REGULAR": "Path is not a regular file.",
+    "WORKSPACE_PATH_MUST_BE_FILE": "Path must be a file.",
+    "WORKSPACE_PARENT_NOT_FOUND": "Parent directory not found.",
+    "WORKSPACE_PARENT_NOT_DIRECTORY": "Parent path is not a directory.",
+    "WORKSPACE_FILE_NUL_BYTES": "Content contains NUL bytes — binary files cannot be edited as text.",
+    "WORKSPACE_FILE_TOO_LARGE": "File too large.",
+    "WORKSPACE_FILE_SHA_MISMATCH": "Conflict: the file changed on disk.",
+    "WORKSPACE_DELETE_NOT_REGULAR": "Only regular files can be deleted.",
+    "WORKSPACE_DELETE_FAILED": "Delete failed: {stderr}",
+    "WORKSPACE_RENAME_SAME_PATH": "Source and destination are the same path.",
+    "WORKSPACE_RENAME_SRC_NOT_FOUND": "Source not found.",
+    "WORKSPACE_RENAME_SRC_NOT_REGULAR": "Source is not a regular file.",
+    "WORKSPACE_RENAME_DEST_EXISTS": "Destination already exists.",
+    "WORKSPACE_RENAME_FAILED": "Rename failed: {stderr}",
+    "WORKSPACE_LIST_FAILED": "Directory listing failed.",
+    "WORKSPACE_NOT_GIT_REPO": "Workspace is not a git repo.",
+    "WORKSPACE_GIT_DIRTY": "Working tree has uncommitted changes.",
+    "WORKSPACE_GIT_INVALID_BRANCH": "Invalid branch name.",
+    "WORKSPACE_GIT_INVALID_CURRENT_BRANCH": "Current branch name is invalid.",
+    "WORKSPACE_GIT_DESTRUCTIVE_DISABLED": "Destructive git operations are disabled server-side.",
+    "WORKSPACE_GIT_PUSH_DETACHED_HEAD": "--set-upstream does not work from a detached HEAD.",
+    "WORKSPACE_GIT_COMMAND_FAILED": "git {command} failed: {stderr}",
+    "LOGS_DISABLED": "Log tailing is disabled — set HERMES_LOG_FILE and restart the backend container.",
+    "DIAG_DB_NOT_INITIALISED": "Engine not initialised.",
+    "DIAG_DB_REACHABLE": "Database reachable.",
+    "DIAG_DB_UNREACHABLE": "Database unreachable.",
+    "DIAG_LLM_NO_CREDENTIAL": "No active LLM credential — chat will fail until one is configured.",
+    "DIAG_LLM_ACTIVE": "Active credential: {display} (model {model})",
+    "DIAG_LLM_NEEDS_DB": "Cannot check — database not initialised.",
+    "DIAG_SCHEDULER_NOT_STARTED": "Agent task scheduler did not start.",
+    "DIAG_SCHEDULER_LOOP_STOPPED": "Agent task scheduler is not running (loop stopped).",
+    "DIAG_SCHEDULER_RUNNING": "Agent task scheduler is running.",
+    "DIAG_WORKSPACE_NEEDS_DB": "Cannot check — database not initialised.",
+    "DIAG_WORKSPACE_NONE": "No workspaces configured (add one in /settings/workspaces).",
+    "DIAG_WORKSPACE_CONFIGURED": "{count} workspace(s) configured: {names}",
+    "DIAG_SANDBOX_CONFIGURED": "Rootless Podman configured (image {image}, network {network}).",
+    "DIAG_SANDBOX_SOCKET_MISSING": "HERMES_SANDBOX_SOCKET is not set — tool calls that need a sandbox will fail.",
+    "DIAG_SANDBOX_MANAGER_FAILED": "Sandbox socket configured but the manager failed to start.",
+    "chat": {
+      "upstream_unreachable": "The LLM provider is unreachable. Check your credentials in Settings.",
+      "upstream_timeout": "The LLM provider took too long. Please try again.",
+      "upstream_http_error": "The LLM provider returned an error{statusSuffix}.",
+      "upstream_rate_limited": "Request limit reached at the provider (429 Too Many Requests).",
+      "agent_error": "Internal error: {message}",
+      "unauthorized": "Session expired — please sign in again.",
+      "request_failed": "Chat request failed{statusSuffix}.",
+      "unknown": "Chat error.",
+      "hintModelSwitch": "Try a different model:",
+      "hintModelSwitchCommand": "/model [model-name] in chat",
+      "hintModelSwitchLink": "Choose model in Settings"
+    }
+  },
+  "pages": {
+    "login": {
+      "title": "Hermes",
+      "description": "Enter your bearer token. It is stored only in this browser.",
+      "tokenLabel": "Token",
+      "tokenPlaceholder": "hex-string",
+      "submit": "Sign in",
+      "submitting": "Checking…",
+      "errors": {
+        "tokenRequired": "Token must not be empty.",
+        "tokenInvalid": "Token rejected (401).",
+        "serverError": "Server responded with {status}.",
+        "network": "Network error."
+      }
+    },
+    "chat": {
+      "notFound": "Conversation not found."
+    },
+    "settings": {
+      "title": "Control Center",
+      "subtitle": "Provider, messenger and other agent configuration.",
+      "placeholder": {
+        "notImplemented": "This section is not yet implemented."
+      }
+    },
+    "preferences": {
+      "language": {
+        "title": "Language",
+        "description": "Choose the language for the interface.",
+        "label": "Language",
+        "options": {
+          "de": "German",
+          "en": "English"
+        }
+      },
+      "personas": {
+        "title": "Personas",
+        "subtitle": "Who the agent is — identity and tone.",
+        "newButton": "New persona",
+        "form": {
+          "name": "Name",
+          "namePlaceholder": "e.g. Hermes the Direct",
+          "isDefault": "Set as global default persona",
+          "isDefaultShort": "Default persona",
+          "credential": "LLM Credential",
+          "credentialGlobalOption": "— Global default credential —",
+          "model": "Model"
+        },
+        "fragments": {
+          "soul": {
+            "label": "Soul – voice & tone",
+            "description": "How the agent sounds: direct, polite, formal, playful — and what boundaries it respects.",
+            "placeholder": "You are direct, precise, and technical. No filler."
+          },
+          "identity": {
+            "label": "Identity – name & vibe",
+            "description": "Who the agent is: name, personality, optionally an emoji.",
+            "placeholder": "You are Hermes, a personal AI assistant."
+          },
+          "agents": {
+            "label": "Agents – operating rules",
+            "description": "How the agent works: test-driven, asks before destructive actions, …",
+            "placeholder": "You follow test-driven development. You ask before destructive actions."
+          }
+        },
+        "history": {
+          "toggle": "History",
+          "empty": "No versions stored.",
+          "restoreButton": "Restore",
+          "restoreAria": "Restore snapshot from {date} (author: {author})",
+          "restoreConfirm": {
+            "title": "Restore version?",
+            "description": "\"{name}\" will be rolled back to the displayed snapshot (author: {author}). A new history entry is created automatically."
+          }
+        },
+        "defaultBadge": "Default",
+        "editAria": "Edit",
+        "deleteAria": "Delete",
+        "setDefault": "Set as default",
+        "deleteConfirm": {
+          "title": "Delete persona?",
+          "description": "\"{name}\" will be permanently deleted."
+        },
+        "errors": {
+          "nameRequired": "Name is required.",
+          "duplicate": "Name already taken.",
+          "invalidInput": "Invalid input.",
+          "generic": "Error.",
+          "load": "Failed to load."
+        }
+      },
+      "channels": {
+        "title": "Channels",
+        "subtitle": "How the channel behaves — format, length, tone.",
+        "defaultPromptBadge": "Default prompt",
+        "customPromptBadge": "Custom prompt",
+        "personaLabel": "Default persona for this channel",
+        "personaGlobalOption": "— Global default (is_default persona) —",
+        "promptLabel": "Channel prompt",
+        "resetButton": "Reset prompt",
+        "resetConfirm": {
+          "title": "Reset prompt?",
+          "description": "The channel prompt for \"{label}\" will be reset to the default."
+        }
+      }
+    },
+    "llm": {
+      "title": "LLM credentials",
+      "description": "Pick which provider drives the Hermes agent. Only one credential is active at a time.",
+      "list": {
+        "heading": "Available",
+        "empty": "No credentials yet. Add an API key below or start the Claude OAuth flow.",
+        "createdAt": "Created {timestamp}",
+        "authorizedAt": "Authorized {timestamp}",
+        "active": "Active",
+        "activate": "Activate",
+        "deleteAria": "Delete credential {name}",
+        "deleteConfirm": "Really delete \"{name}\"?",
+        "oauthNotReady": "OAuth flow is not finished yet — click „Start OAuth“ below to retry the code submission step."
+      },
+      "modeBadge": {
+        "apiKey": "API Key",
+        "oauthClaude": "OAuth · Claude",
+        "oauthClaudeStatus": "OAuth · {status}"
+      },
+      "addKey": {
+        "heading": "Add API key",
+        "provider": "Provider",
+        "displayName": "Display name",
+        "displayNamePlaceholder": "e.g. Martin OpenAI",
+        "apiKey": "API key",
+        "apiKeyPlaceholder": "sk-…",
+        "baseUrl": "Base URL",
+        "baseUrlRequired": "required",
+        "baseUrlOptional": "optional — overrides provider default",
+        "baseUrlPlaceholder": "https://my-mirror.example.com/v1",
+        "submit": "Add",
+        "submitting": "Saving…",
+        "errorBaseUrlRequired": "\"Custom\" provider requires a base URL."
+      },
+      "oauth": {
+        "heading": "Claude (OAuth)",
+        "intro": "Runs {command} in the backend, opens the authorization page in a new tab and accepts the verification code.",
+        "start": "Start OAuth",
+        "starting": "Starting…",
+        "awaitingCode": "Tab opened — authorize at Anthropic, copy the verification code and paste it below.",
+        "reopenTab": "Reopen tab",
+        "codePlaceholder": "Verification code",
+        "submit": "Submit",
+        "submitting": "Verifying code…",
+        "done": "Authorized. The credential appears in the list above.",
+        "expired": "OAuth flow expired. Start again.",
+        "startFailed": "OAuth start failed.",
+        "codeRejected": "Code rejected.",
+        "statusPollFailed": "Status poll failed."
+      },
+      "errors": {
+        "load": "Failed to load.",
+        "save": "Failed to save.",
+        "activate": "Failed to activate.",
+        "delete": "Failed to delete."
+      }
+    },
+    "logs": {
+      "title": "Logs",
+      "copy": "Copy",
+      "copyAria": "Copy all",
+      "wrap": "Wrap",
+      "wrapOn": "Enable wrap",
+      "wrapOff": "Disable wrap",
+      "severityAria": "Severity",
+      "lineCountAria": "Number of lines",
+      "searchPlaceholder": "Search (substring)…",
+      "searchAria": "Search logs",
+      "disabled": {
+        "before": "Log tailing is not active. Set ",
+        "middle": " (e.g. ",
+        "after": "), restart the backend container — then this page loads the latest structured-log lines."
+      },
+      "noMatch": "No matches for \"{search}\".",
+      "empty": "No lines in the log file yet.",
+      "copied": "{count} lines copied.",
+      "copyFailed": "Copy failed."
+    },
+    "insights": {
+      "title": "Insights",
+      "periodAria": "Period",
+      "periods": {
+        "24h": "24h",
+        "7d": "7 days",
+        "30d": "30 days"
+      },
+      "tiles": {
+        "runs": "Runs",
+        "tokens": "Tokens (in / out)",
+        "errors": "Errors",
+        "cost": "Cost (estimated)"
+      },
+      "chart": {
+        "title": "Daily token usage",
+        "subtitle": "UTC days, bars sum input + output.",
+        "aria": "Token usage per day"
+      },
+      "byModel": {
+        "title": "Per model",
+        "model": "Model",
+        "runs": "Runs",
+        "in": "In",
+        "out": "Out",
+        "errors": "Errors"
+      },
+      "status": {
+        "title": "Run status",
+        "success": "Success:",
+        "error": "Error:",
+        "cancelled": "Cancelled:",
+        "running": "Running:"
+      },
+      "empty": "No runs in the selected period."
+    },
+    "memory": {
+      "sidebarTitle": "Personal memory",
+      "newNote": "New note",
+      "searchPlaceholder": "Search…",
+      "searchAria": "Search memory",
+      "noMatch": "No matches for \"{query}\".",
+      "empty": "No notes yet.",
+      "detailEmptyTitle": "Memory",
+      "emptyTitle": "Select a note",
+      "emptyHint": "Pick a note from the list or create a new one.",
+      "deleteConfirm": {
+        "title": "Delete note?",
+        "description": "\"{key}\" will be permanently deleted."
+      },
+      "form": {
+        "key": "Key",
+        "keyPlaceholder": "e.g. project.holzi.status",
+        "content": "Content (Markdown)",
+        "tags": "Tags (comma-separated)",
+        "tagsPlaceholder": "e.g. hermes, status",
+        "contentRequired": "Content must not be empty.",
+        "keyRequired": "Key is required."
+      },
+      "errors": {
+        "load": "Failed to load.",
+        "save": "Failed to save.",
+        "delete": "Failed to delete."
+      }
+    },
+    "workspaces": {
+      "title": "Workspaces",
+      "createAria": "Create workspace",
+      "emptyList": "No workspaces yet. Create one to use sandbox operations and the workspace browser.",
+      "detailEmptyTitle": "Workspace",
+      "emptyTitle": "Select a workspace",
+      "emptyHint": "Pick a workspace from the list or create a new one.",
+      "restartAria": "Restart sandbox",
+      "renameAria": "Rename",
+      "archiveAria": "Archive",
+      "displayName": "Display name",
+      "displayNamePlaceholder": "e.g. Notes",
+      "list": {
+        "dirty": "dirty"
+      },
+      "create": {
+        "slugTitle": "Create workspace",
+        "slugDescription": "Slug = directory name in the sandbox volume. Lowercase, kebab-case, 2–64 chars.",
+        "slugPlaceholder": "e.g. notes or my-project",
+        "slugConfirm": "Next",
+        "nameTitle": "Display name",
+        "nameDescription": "Label for the list — can be renamed later.",
+        "namePlaceholder": "e.g. Notes",
+        "nameConfirm": "Create",
+        "success": "Workspace \"{name}\" created.",
+        "error": "Failed to create."
+      },
+      "rename": {
+        "empty": "Display name must not be empty.",
+        "success": "Workspace renamed.",
+        "error": "Failed to rename."
+      },
+      "archive": {
+        "title": "Archive workspace?",
+        "description": "\"{name}\" will be removed from the list. The data in the sandbox volume stays — restoring requires a direct DB change.",
+        "success": "Workspace archived.",
+        "error": "Failed to archive."
+      },
+      "restart": {
+        "success": "Sandbox \"{name}\" restarted.",
+        "error": "Sandbox restart failed."
+      },
+      "errors": {
+        "load": "Failed to load."
+      },
+      "sandbox": {
+        "heading": "Sandbox",
+        "exit": "· Exit {code}",
+        "hint": "The sandbox starts automatically on the first tool call. The restart button at the top right discards the container and creates a new one (data in the volume stays).",
+        "states": {
+          "absent": "No sandbox handle",
+          "running": "Sandbox running",
+          "exited": "Sandbox exited",
+          "crashed": "Sandbox crashed",
+          "oom": "Sandbox OOM",
+          "removed": "Sandbox removed"
+        }
+      },
+      "disk": {
+        "heading": "Disk",
+        "used": "used",
+        "quota": "· Quota {value}",
+        "noQuota": "· no quota set"
+      },
+      "git": {
+        "heading": "Git",
+        "notRepo": "Workspace is not a Git repo (yet). The first write from chat doesn't initialise anything automatically — `git init` is done manually in the sandbox tool.",
+        "dirty": "Changes",
+        "clean": "clean"
+      },
+      "meta": {
+        "created": "Created: {timestamp}",
+        "archived": "Archived: {timestamp}"
+      }
+    },
+    "tasks": {
+      "sidebarTitle": "Agent tasks",
+      "newTask": "New task",
+      "emptyList": "No tasks yet. \"+\" at the top creates one.",
+      "detailEmptyTitle": "Tasks",
+      "emptyTitle": "Select a task",
+      "emptyHint": "Pick a task from the list or create a new one.",
+      "statusActive": "active",
+      "statusPaused": "paused",
+      "lastRun": "Last run: {timestamp} ({status})",
+      "notRunYet": "Not run yet.",
+      "runNowAria": "Run now",
+      "pauseAria": "Pause",
+      "activateAria": "Activate",
+      "prompt": "Prompt",
+      "scheduleHeading": "Schedule",
+      "form": {
+        "title": "Title",
+        "titlePlaceholder": "e.g. Daily summary",
+        "promptPlaceholder": "What should the agent do?",
+        "mode": "Mode",
+        "once": "One-time",
+        "cron": "Recurring",
+        "dueAt": "Time (local)",
+        "cronExpr": "Cron expression (5 fields)",
+        "timezone": "Timezone (IANA)"
+      },
+      "cronHint": {
+        "prefix": "e.g. ",
+        "mid": " = daily 08:00, ",
+        "suffix": " = every 15 min."
+      },
+      "deleteConfirm": {
+        "title": "Delete task?",
+        "description": "\"{title}\" will be permanently deleted."
+      },
+      "errors": {
+        "titleRequired": "Title is required.",
+        "promptRequired": "Prompt is required.",
+        "dueAtInvalid": "Please pick a valid time.",
+        "cronRequired": "Cron expression is required.",
+        "deletedMeanwhile": "Task was deleted in the meantime.",
+        "save": "Failed to save.",
+        "toggle": "Failed to toggle.",
+        "reload": "Failed to reload.",
+        "run": "Failed to run.",
+        "delete": "Failed to delete."
+      }
+    },
+    "diagnostics": {
+      "title": "Diagnostics",
+      "status": {
+        "ok": "OK",
+        "warning": "Warning",
+        "error": "Error"
+      },
+      "crashState": {
+        "crashed": "Crashed",
+        "oom": "Out of memory",
+        "removed": "Removed"
+      },
+      "running": "running …",
+      "subsystems": {
+        "title": "Subsystems",
+        "subtitle": "What the agent needs to start and for chat / messenger / tools.",
+        "labels": {
+          "database": "Database",
+          "llm": "LLM",
+          "scheduler": "Scheduler",
+          "workspace": "Workspaces",
+          "sandbox": "Sandbox runtime"
+        }
+      },
+      "crashes": {
+        "title": "Sandbox crashes",
+        "subtitle": "Workspace sandboxes the health watcher reported as dead — stays visible even without an open chat stream and across container restarts.",
+        "empty": "No sandbox crashes recorded. 🎉",
+        "exitLabel": "exit"
+      },
+      "failures": {
+        "title": "Recent failures",
+        "subtitleBefore": "Agent runs with status ",
+        "subtitleMid": " from ",
+        "subtitleAfter": ". Expand a row for the trace.",
+        "empty": "No failed runs recorded. 🎉",
+        "conversation": "Conv. #{id}",
+        "noTrace": "No traceback stored."
+      }
+    },
+    "skills": {
+      "title": "Skills & Tools",
+      "list": {
+        "enabledToggle": {
+          "label": "Enabled",
+          "descriptionEnabled": "In catalog",
+          "descriptionDisabled": "Hidden"
+        },
+        "tokenBudget": {
+          "summary": "~{tokens} tokens · {enabled}/{total} active"
+        }
+      },
+      "relative": {
+        "never": "never checked",
+        "seconds": "{n} s ago",
+        "minutes": "{n} min ago",
+        "hours": "{n} h ago"
+      },
+      "toasts": {
+        "urlCopied": "MCP URL copied.",
+        "copyFailed": "Copy failed."
+      },
+      "mcpEndpoint": {
+        "title": "MCP endpoint (inbound)",
+        "subtitle": "External clients like Cline or HaexChat can reach this agent's tools via MCP.",
+        "reloadAria": "Reload MCP status",
+        "statusUnknownLabel": "Status unknown —",
+        "active": "active",
+        "inactive": "inactive",
+        "toolsExposed": "{count} tools exposed",
+        "copyUrlAria": "Copy MCP URL",
+        "copy": "Copy",
+        "configBefore": "Configure the endpoint URL ",
+        "configMid": " as a streamable-HTTP MCP server. Auth via bearer token (see ",
+        "configAfter": ").",
+        "configureButton": "Configure MCP server"
+      },
+      "tools": {
+        "title": "Tools",
+        "count": "{count} tools available",
+        "subtitle": "What the agent can call today.",
+        "empty": "Catalog empty — backend not initialised?",
+        "approval": "Approval",
+        "viewParams": "View parameters",
+        "noParams": "no parameters",
+        "configure": "Configure",
+        "builtinNoConfig": "Built-in tools currently have no dedicated configuration surface."
+      }
+    }
+  }
+}
