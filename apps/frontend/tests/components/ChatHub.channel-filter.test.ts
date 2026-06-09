@@ -35,7 +35,7 @@ describe('ChatHub channel filtering', () => {
 
     mockGet.mockResolvedValue(fakeConversations)
 
-    const { default: ChatHub } = await import('~/components/ChatHub.vue')
+    const { default: ChatHub } = await import('@holzi/ui/components/chat/Hub.vue')
     const wrapper = mount(ChatHub, {
       global: {
         stubs: {
