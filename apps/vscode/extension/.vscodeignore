@@ -1,0 +1,7 @@
+**/*.ts
+!out/**
+node_modules/
+src/**
+docs/
+tsconfig*.json
+.gitignore

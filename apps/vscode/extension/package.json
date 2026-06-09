@@ -1,0 +1,77 @@
+{
+  "name": "@holzi/extension",
+  "displayName": "Holzi",
+  "description": "Holzi AI assistant in VS Code",
+  "version": "0.1.5",
+  "packageManager": "pnpm@10.33.2",
+  "publisher": "haex",
+  "license": "MIT",
+  "icon": "images/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/haexhub/holzi-vscode"
+  },
+  "bugs": {
+    "url": "https://github.com/haexhub/holzi-vscode/issues"
+  },
+  "homepage": "https://github.com/haexhub/holzi-vscode#readme",
+  "engines": {
+    "vscode": "^1.120.0"
+  },
+  "categories": [
+    "AI"
+  ],
+  "keywords": [
+    "ai",
+    "chat",
+    "assistant",
+    "holzi"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "holzi.openChat",
+        "title": "Holzi: Open Chat"
+      },
+      {
+        "command": "holzi.configure",
+        "title": "Holzi: Configure Server"
+      },
+      {
+        "command": "holzi.login",
+        "title": "Holzi: Sign In"
+      }
+    ],
+    "configuration": {
+      "title": "Holzi",
+      "properties": {
+        "holzi.host": {
+          "type": "string",
+          "default": "https://holzi.haex.cloud",
+          "description": "Holzi server URL"
+        },
+        "holzi.token": {
+          "type": "string",
+          "description": "Auth token (Bearer)",
+          "isSensitive": true
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p tsconfig.json",
+    "watch": "tsc -p tsconfig.json --watch",
+    "bundle": "rolldown src/extension.ts --format cjs --platform node --external vscode --file out/extension.js --sourcemap",
+    "build": "pnpm run compile && pnpm run bundle",
+    "package": "pnpm run build && vsce package --no-dependencies"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^25.9.2",
+    "@types/vscode": "^1.120.0",
+    "@vscode/vsce": "^3.9.2",
+    "rolldown": "^1.1.0",
+    "typescript": "^6.0.3"
+  }
+}
