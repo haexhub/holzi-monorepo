@@ -11,7 +11,7 @@
 set -euo pipefail
 
 HERMES_URL="${HERMES_URL:-http://localhost:8082}"
-OUT="app/types/api-generated.ts"
+OUT="../../packages/holzi-ui/types/api-generated.ts"
 
 if [[ -z "${HERMES_AUTH_TOKEN:-}" ]]; then
   echo "error: HERMES_AUTH_TOKEN env var is required (the schema endpoint is auth-gated)" >&2
