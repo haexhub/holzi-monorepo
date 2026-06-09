@@ -231,3 +231,17 @@ export interface OAuthStatusResponse {
   id: number
   status: 'pending' | 'authorized' | 'expired' | string
 }
+
+// --- Chat stream errors -------------------------------------------------
+// Structural view of a chat-stream error used by the layer's ErrorCard.
+// The frontend defines `class ChatStreamError extends Error` in
+// `useChatStream.ts` (runtime semantics: `new`, `instanceof`, plus a
+// `ChatStreamErrorCode` union). Class instances are structurally
+// assignable to this type, so ErrorCard can stay transport-agnostic and
+// the webview can produce plain objects of this shape without depending
+// on the HTTP-coupled composable.
+export type ChatStreamError = {
+  message: string
+  code: string
+  statusCode?: number | null
+}

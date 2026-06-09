@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { AlertCircle, X } from 'lucide-vue-next'
-// TODO(Task 5): re-import from layer after useChatStream moves
-// import type { ChatStreamError } from '~/composables/useChatStream'
-type ChatStreamError = { message: string; code: string; statusCode?: number }
+import type { ChatStreamError } from '~/types/api'
 
 const props = defineProps<{
   error: ChatStreamError
