@@ -39,13 +39,15 @@ beforeAll(async () => {
   hermes = await startHermes()
   api = makeClient(hermes)
 
-  // 1. Seed the credential. Hermes activates it for routing automatically.
+  // 1. Seed the credential. Created rows start with is_active=0, so:
+  // 2. activate it (without this /api/chat fails with PERSONA_NO_CREDENTIAL),
+  // 3. pin the cheap model on it.
   const cred = await api.post<{ id: number }>('/api/llm/credentials', {
     provider,
     display_name: `e2e-test-${provider}`,
     api_key: apiKey,
   })
-  // 2. Pin the cheap model.
+  await api.patch(`/api/llm/credentials/${cred.id}/activate`)
   await api.patch(`/api/llm/credentials/${cred.id}/model`, { model })
 }, 120_000)
 
@@ -106,7 +108,10 @@ describeIfKey('agent /api/chat end-to-end', () => {
         message: 'Reply with the single word: ready.',
       }),
     })
-    expect(resp.ok).toBe(true)
+    if (!resp.ok) {
+      const body = await resp.text().catch(() => '<no body>')
+      throw new Error(`/api/chat ${resp.status}: ${body}`)
+    }
     expect(resp.headers.get('content-type')).toMatch(/text\/event-stream/)
 
     const events = await consumeSse(resp)
@@ -120,9 +125,10 @@ describeIfKey('agent /api/chat end-to-end', () => {
     expect(kinds.at(-1)).toBe('done')
 
     // The conversation should now exist + carry both user + assistant.
-    const sessionEvt = events.find(e => e.event === 'session')!.data as { conversation_id: number }
+    // Envelope shape: { event: 'session', version, data: { conversation_id } }.
+    const sessionEvt = events.find(e => e.event === 'session')!.data as { data: { conversation_id: number } }
     const detail = await api.get<{ messages: Array<{ role: string; content: unknown }> }>(
-      `/api/conversations/${sessionEvt.conversation_id}`,
+      `/api/conversations/${sessionEvt.data.conversation_id}`,
     )
     const roles = detail.messages.map(m => m.role)
     expect(roles).toContain('user')
