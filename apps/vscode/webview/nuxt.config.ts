@@ -22,6 +22,15 @@ export default defineNuxtConfig({
     buildAssetsDir: '_nuxt/',
   },
 
+  // Hash-mode routing: the webview document loads as index.html (no server to
+  // map arbitrary paths), so history mode would 404 on the initial /index.html
+  // path. Hash mode ignores the pathname and routes via #/… instead.
+  router: {
+    options: {
+      hashMode: true,
+    },
+  },
+
   // No dev-proxy here — webview talks directly to a backend URL provided
   // by the extension at runtime (via postMessage).
 })
