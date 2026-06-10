@@ -2,9 +2,9 @@ import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   test: {
-    // Each test file gets its own hermes container — running them in
-    // parallel multiplies docker startup time. Serial is the right default;
-    // override with --pool=threads --no-isolate if you need speed.
+    // Each test file boots its own hermes container — file-level parallelism
+    // multiplies docker startup and port collisions. Serial is the right
+    // default; override with --pool=threads --no-isolate if you need speed.
     fileParallelism: false,
     testTimeout: 60_000,
     hookTimeout: 120_000,
