@@ -53,6 +53,10 @@ export class HolziPanel {
       this.logger.appendLine(`[holzi] sent config (host=${host}, hasToken=${token.length > 0})`)
       return
     }
+    if (msg?.type === 'set_title' && typeof (msg as { title?: unknown }).title === 'string') {
+      this.panel.title = (msg as { title: string }).title
+      return
+    }
     this.logger.appendLine(`[holzi] unhandled webview message: ${JSON.stringify(msg)}`)
   }
 
