@@ -9,6 +9,13 @@ out/
 *.vsix
 apps/vscode/webview/dist
 
+# Bundle analyzer output (BUNDLE_ANALYZE=1 pnpm run generate)
+bundle-stats.html
+bundle-stats.json
+
+# Playwright MCP tool output (browser session logs, screenshots)
+.playwright-mcp/
+
 # Environment
 .env
 .env.*

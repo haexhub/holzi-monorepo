@@ -1,33 +1,37 @@
-import MarkdownIt from 'markdown-it'
-import Shiki, { type MarkdownItShikiOptions } from '@shikijs/markdown-it'
-import katex from '@vscode/markdown-it-katex'
-import DOMPurify from 'dompurify'
+import type MarkdownIt from 'markdown-it'
 
-// `shiki` itself is only a transitive dep, so derive the language type from
-// the plugin's own options instead of importing it directly.
-type ShikiLang = NonNullable<MarkdownItShikiOptions['langs']>[number]
-
-// Languages preloaded into the shiki highlighter. Anything else falls back to
-// plain text (see `fallbackLanguage`) instead of throwing.
-const LANGS: ShikiLang[] = [
-  'javascript',
-  'typescript',
-  'jsx',
-  'tsx',
-  'vue',
-  'python',
-  'bash',
-  'shell',
-  'json',
-  'yaml',
-  'html',
-  'css',
-  'sql',
-  'rust',
-  'go',
-  'markdown',
-  'diff',
-  'dockerfile',
+// The whole markdown stack — markdown-it, shiki, katex, dompurify — only
+// loads when the first message renders. Type-only import above keeps the
+// `MarkdownIt` type without bundling the runtime; everything else is pulled
+// in via dynamic imports inside getMarkdown() / renderMarkdown(). Saves
+// ~700 KB-1 MB from the initial bundle (e.g. the login screen never needs
+// any of this).
+//
+// Fine-grained Shiki imports: `@shikijs/markdown-it` (default entry) pulls
+// every bundled grammar (~9 MB) into the bundle to make string-name lookups
+// work at runtime. By building a highlighter from `shiki/core` with explicit
+// `import('@shikijs/langs/<name>')` calls we ship only what we actually use.
+// JavaScript regex engine avoids the Oniguruma WASM blob (and the
+// 'wasm-unsafe-eval' CSP we used to need for it).
+const LANG_LOADERS = [
+  () => import('@shikijs/langs/javascript'),
+  () => import('@shikijs/langs/typescript'),
+  () => import('@shikijs/langs/jsx'),
+  () => import('@shikijs/langs/tsx'),
+  () => import('@shikijs/langs/vue'),
+  () => import('@shikijs/langs/python'),
+  () => import('@shikijs/langs/bash'),
+  () => import('@shikijs/langs/shellscript'),
+  () => import('@shikijs/langs/json'),
+  () => import('@shikijs/langs/yaml'),
+  () => import('@shikijs/langs/html'),
+  () => import('@shikijs/langs/css'),
+  () => import('@shikijs/langs/sql'),
+  () => import('@shikijs/langs/rust'),
+  () => import('@shikijs/langs/go'),
+  () => import('@shikijs/langs/markdown'),
+  () => import('@shikijs/langs/diff'),
+  () => import('@shikijs/langs/dockerfile'),
 ]
 
 // markdown-it is configured once (shiki setup is async and expensive); the
@@ -37,19 +41,40 @@ let mdPromise: Promise<MarkdownIt> | null = null
 async function getMarkdown(): Promise<MarkdownIt> {
   if (mdPromise) return mdPromise
   mdPromise = (async () => {
+    const [
+      { default: MarkdownItCtor },
+      { fromHighlighter },
+      { createHighlighterCore },
+      { createJavaScriptRegexEngine },
+      { default: katex },
+    ] = await Promise.all([
+      import('markdown-it'),
+      import('@shikijs/markdown-it/core'),
+      import('shiki/core'),
+      import('shiki/engine/javascript'),
+      import('@vscode/markdown-it-katex'),
+    ])
+
     // `html: false` escapes raw HTML in the source — assistant output is
     // Markdown, not trusted HTML. DOMPurify is the second line of defence.
-    const md = new MarkdownIt({ html: false, linkify: true, breaks: true })
+    const md = new MarkdownItCtor({ html: false, linkify: true, breaks: true })
+
+    const highlighter = await createHighlighterCore({
+      themes: [
+        import('@shikijs/themes/github-light'),
+        import('@shikijs/themes/github-dark'),
+      ],
+      langs: LANG_LOADERS.map(load => load()),
+      engine: createJavaScriptRegexEngine(),
+    })
 
     md.use(
-      await Shiki({
+      fromHighlighter(highlighter, {
         themes: { light: 'github-light', dark: 'github-dark' },
         // Emit CSS variables for both themes so the UI can switch with the
         // app's `.dark` class instead of re-highlighting.
         defaultColor: false,
-        langs: LANGS,
-        // `plaintext` is a shiki built-in; the type only lists grammar langs.
-        fallbackLanguage: 'plaintext' as ShikiLang,
+        fallbackLanguage: 'plaintext',
       }),
     )
 
@@ -90,8 +115,18 @@ async function getMarkdown(): Promise<MarkdownIt> {
 
 // Render Markdown to sanitized HTML. DOMPurify keeps the inline styles shiki
 // emits and the MathML KaTeX produces, while stripping any active content.
+// DOMPurify is loaded in parallel with the markdown setup on first call; the
+// browser caches the chunk so subsequent renders pay only a microtask.
+let domPurifyPromise: Promise<typeof import('dompurify').default> | null = null
+function getDomPurify() {
+  if (!domPurifyPromise) {
+    domPurifyPromise = import('dompurify').then(m => m.default)
+  }
+  return domPurifyPromise
+}
+
 export async function renderMarkdown(src: string): Promise<string> {
-  const md = await getMarkdown()
+  const [md, DOMPurify] = await Promise.all([getMarkdown(), getDomPurify()])
   const raw = md.render(src ?? '')
   return DOMPurify.sanitize(raw, { ADD_ATTR: ['data-code'] })
 }
