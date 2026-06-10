@@ -32,7 +32,8 @@
     "commands": [
       {
         "command": "holzi.openChat",
-        "title": "Holzi: Open Chat"
+        "title": "Holzi: Open Chat",
+        "icon": "$(add)"
       },
       {
         "command": "holzi.configure",
@@ -41,8 +42,73 @@
       {
         "command": "holzi.login",
         "title": "Holzi: Sign In"
+      },
+      {
+        "command": "holzi.openSession",
+        "title": "Holzi: Open Session"
+      },
+      {
+        "command": "holzi.refreshSessions",
+        "title": "Holzi: Refresh Sessions",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "holzi.deleteSession",
+        "title": "Holzi: Delete Session",
+        "icon": "$(trash)"
       }
     ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "holzi",
+          "title": "Holzi",
+          "icon": "images/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "holzi": [
+        {
+          "id": "holzi.sessions",
+          "name": "Sessions",
+          "type": "tree"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "holzi.sessions",
+        "when": "!holzi.authenticated",
+        "contents": "Sign in to see your Holzi sessions.\n[Sign in to Holzi](command:holzi.login)"
+      },
+      {
+        "view": "holzi.sessions",
+        "when": "holzi.authenticated && holzi.sessionsEmpty",
+        "contents": "No sessions yet.\n[New session](command:holzi.openChat)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "holzi.openChat",
+          "when": "view == holzi.sessions",
+          "group": "navigation@1"
+        },
+        {
+          "command": "holzi.refreshSessions",
+          "when": "view == holzi.sessions",
+          "group": "navigation@2"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "holzi.deleteSession",
+          "when": "view == holzi.sessions && viewItem == session",
+          "group": "inline"
+        }
+      ]
+    },
     "configuration": {
       "title": "Holzi",
       "properties": {
