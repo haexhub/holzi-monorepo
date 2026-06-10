@@ -134,7 +134,7 @@ export class HolziPanel {
     const csp = [
       `default-src 'none'`,
       `style-src ${webview.cspSource} 'unsafe-inline'`,
-      `script-src 'nonce-${nonce}' 'strict-dynamic' 'wasm-unsafe-eval'`,
+      `script-src 'nonce-${nonce}' 'strict-dynamic'`,
       `font-src ${webview.cspSource} data:`,
       `img-src ${webview.cspSource} data: https:`,
       `connect-src https: wss:`,
