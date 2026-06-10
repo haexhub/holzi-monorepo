@@ -13,6 +13,9 @@ apps/vscode/webview/dist
 bundle-stats.html
 bundle-stats.json
 
+# Playwright MCP tool output (browser session logs, screenshots)
+.playwright-mcp/
+
 # Environment
 .env
 .env.*
