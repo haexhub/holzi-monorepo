@@ -16,6 +16,11 @@ bundle-stats.json
 # Playwright MCP tool output (browser session logs, screenshots)
 .playwright-mcp/
 
+# Playwright test artifacts
+playwright-report/
+test-results/
+.env.test
+
 # Environment
 .env
 .env.*
