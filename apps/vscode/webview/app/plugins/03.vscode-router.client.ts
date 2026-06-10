@@ -29,4 +29,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     $vscode.post({ type: 'conversation_id', id: match ? Number(match[1]) : null })
   }
   router.afterEach((to) => report(to.path))
+  // Initial report so the host's state matches the webview's even when no
+  // navigation event fires (e.g. fresh load on `/`).
+  report(router.currentRoute.value.path)
 })

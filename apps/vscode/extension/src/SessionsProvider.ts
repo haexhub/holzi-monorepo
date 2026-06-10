@@ -66,6 +66,10 @@ export class SessionsProvider implements vscode.TreeDataProvider<SessionItem> {
           const msg = err instanceof Error ? err.message : String(err)
           this.logger.appendLine(`[holzi] sessions fetch failed: ${msg}`)
           vscode.window.showErrorMessage(`Holzi: could not load sessions (${msg})`)
+          // Trigger the "No sessions yet" welcome view so the user sees the
+          // [New session] action instead of a silently empty tree. The error
+          // toast above conveys what actually went wrong.
+          await vscode.commands.executeCommand('setContext', 'holzi.sessionsEmpty', true)
         }
         this.cache = []
         return []

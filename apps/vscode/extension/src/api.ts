@@ -16,6 +16,9 @@ export class HolziHttpError extends Error {
   }
 }
 
+/** Default request timeout in ms; covers DNS + connect + response. */
+const FETCH_TIMEOUT_MS = 30_000
+
 async function authedFetch(
   context: vscode.ExtensionContext,
   path: string,
@@ -23,13 +26,29 @@ async function authedFetch(
 ): Promise<Response> {
   const host = getHost() || 'https://holzi.haex.cloud'
   const token = await getToken(context)
-  return fetch(`${host}${path}`, {
-    ...init,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      ...(init?.headers ?? {}),
-    },
-  })
+
+  // A hanging fetch would block the sessions tree indefinitely. Add a
+  // controller-based timeout, but merge any caller-supplied signal so an
+  // upstream cancel (e.g. tree refresh) still aborts the request.
+  const controller = new AbortController()
+  const callerSignal = init?.signal
+  if (callerSignal) {
+    if (callerSignal.aborted) controller.abort(callerSignal.reason)
+    else callerSignal.addEventListener('abort', () => controller.abort(callerSignal.reason), { once: true })
+  }
+  const timeout = setTimeout(() => controller.abort(new Error('request timed out')), FETCH_TIMEOUT_MS)
+  try {
+    return await fetch(`${host}${path}`, {
+      ...init,
+      signal: controller.signal,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        ...(init?.headers ?? {}),
+      },
+    })
+  } finally {
+    clearTimeout(timeout)
+  }
 }
 
 export async function listConversations(

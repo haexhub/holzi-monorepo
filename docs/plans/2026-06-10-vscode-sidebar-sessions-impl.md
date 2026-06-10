@@ -1,7 +1,5 @@
 # VS Code Activity-Bar Sidebar with Sessions List Implementation Plan
 
-> **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
-
 **Goal:** Re-introduce a Holzi entry in the VS Code Activity Bar that opens a
 native `TreeView` sidebar listing all conversations (newest first), with a `+`
 to start a new chat, click-to-open (focus existing tab or open a new one at

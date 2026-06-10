@@ -131,6 +131,11 @@ export class HolziPanel {
     // connect-src is intentionally permissive (https: wss:) because the host
     // is only known after the webview receives its config from the extension.
     // If stricter policy is needed later, we can rebuild HTML on config change.
+    //
+    // 'strict-dynamic' is required: Nuxt's entry script is nonced, but it
+    // dynamically imports code-split chunks at runtime which can't carry a
+    // tag-level nonce. strict-dynamic lets a nonced (trusted) script load
+    // further scripts without listing each host source.
     const csp = [
       `default-src 'none'`,
       `style-src ${webview.cspSource} 'unsafe-inline'`,
