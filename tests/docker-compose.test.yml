@@ -1,0 +1,38 @@
+# Isolated Hermes for end-to-end tests.
+#
+# Boots a fresh hermes container on an ephemeral DB, exposed on host port
+# HOLZI_TEST_HERMES_PORT (default 18082). Auth token comes from the env var
+# HOLZI_TEST_AUTH_TOKEN — the test runner generates a fresh one per run so
+# nothing leaks between sessions.
+#
+# Deliberately NOT a copy of docker-compose.local.yml: no traefik, no
+# llm-proxy, no signal worker — tests that need an LLM seed credentials via
+# the API and talk to whatever upstream the env points at.
+
+services:
+  hermes:
+    image: localhost/hermes-server:dev
+    container_name: holzi-test-hermes
+    environment:
+      HERMES_AUTH_TOKEN: ${HOLZI_TEST_AUTH_TOKEN:?set by test runner}
+      # In-container DB path. Ephemeral — gone when the container dies.
+      HERMES_DB_PATH: /tmp/hermes-test.db
+      HERMES_DATA_DIR: /tmp/hermes-test-data
+      # 32 bytes hex (= 64 chars) AES master key. Constant for the test run
+      # so seeded LLM credentials decrypt; rotated per `docker compose up`
+      # via the test runner's env.
+      HERMES_SECRET_KEY: ${HOLZI_TEST_SECRET_KEY:?set by test runner}
+      # No upstream proxy in tests; agent tests override this per-test by
+      # pointing at the real LLM provider via seeded credentials.
+      HERMES_LLM_URL: ${HOLZI_TEST_LLM_URL:-http://invalid.test}
+    ports:
+      - "${HOLZI_TEST_HERMES_PORT:-18082}:8082"
+    # tmpfs so the DB lives in RAM and dies with the container.
+    tmpfs:
+      - /tmp
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8082/healthz', timeout=2).status == 200 else 1)"]
+      interval: 2s
+      timeout: 2s
+      start_period: 3s
+      retries: 15

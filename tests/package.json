@@ -1,0 +1,18 @@
+{
+  "name": "@holzi/tests",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "End-to-end test suite for the Holzi monorepo. Boots a real (containerized) hermes per run and verifies API contracts + agent flow + UI.",
+  "scripts": {
+    "test:api": "vitest run --config vitest.config.ts api",
+    "test:agent": "vitest run --config vitest.config.ts agent",
+    "test:ui": "playwright test",
+    "test": "pnpm run test:api && pnpm run test:agent && pnpm run test:ui"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.0"
+  }
+}
