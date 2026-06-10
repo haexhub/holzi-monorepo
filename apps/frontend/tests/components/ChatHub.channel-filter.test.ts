@@ -6,10 +6,6 @@ vi.mock('vue-i18n', async (importOriginal) => {
   return { ...orig, useI18n: () => ({ t: (k: string) => k }) }
 })
 
-vi.mock('~/stores/lastConversation', () => ({
-  useLastConversationStore: () => ({ remember: vi.fn(), lastId: null }),
-}))
-
 vi.mock('~/stores/auth', () => ({
   useAuthStore: () => ({ logout: vi.fn(), user: { name: 'Test' } }),
 }))

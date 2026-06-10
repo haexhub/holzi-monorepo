@@ -12,7 +12,6 @@ import {
 import { Brain } from 'lucide-vue-next'
 import type ResizablePanel from '~/components/ui/resizable/ResizablePanel.vue'
 import { useMediaQuery } from '@vueuse/core'
-import { useLastConversationStore } from '~/stores/lastConversation'
 import { useAuthStore } from '~/stores/auth'
 import type {
   Attachment,
@@ -162,16 +161,6 @@ const searchQuery = ref('')
 // overlapping requests).
 let loadSeq = 0
 
-// Plan 26: persist the last-active conversation id via the Pinia store
-// (which wraps VueUse `useLocalStorage` — same pattern as `auth.ts`).
-// Updated whenever a conversation becomes active (selection / fresh-chat
-// first-send / route param load) and cleared on logout or when "Neuer
-// Chat" routes back to `/`.
-const lastConv = useLastConversationStore()
-function rememberLastConversation(id: number | null) {
-  lastConv.remember(id)
-}
-
 async function loadConversations() {
   const seq = ++loadSeq
   try {
@@ -262,7 +251,6 @@ async function loadConversation(id: number) {
     sandboxCrashes.value = []
   }
   activeId.value = id
-  rememberLastConversation(id)
   loadingConversation.value = true
   try {
     const detail = await api.get<ConversationDetail>(`/api/conversations/${id}`)
@@ -282,7 +270,6 @@ async function loadConversation(id: number) {
 // messages with the canonical server state.
 async function reloadActive(id: number) {
   activeId.value = id
-  rememberLastConversation(id)
   try {
     const detail = await api.get<ConversationDetail>(`/api/conversations/${id}`)
     messages.value = detail.messages
@@ -303,7 +290,6 @@ function newChat() {
   // One-turn overrides are transient — a fresh chat must start clean.
   nextTurnOverride.value = null
   nextTurnSkillHints.value = []
-  rememberLastConversation(null)
   // Drop the id from the URL so a reload doesn't reopen the previous chat.
   const homePath = localePath('/')
   if (router.currentRoute.value.path !== homePath) {
@@ -345,7 +331,6 @@ async function runStream(
     const result = await start({
       onSession: (id) => {
         activeId.value = id
-        rememberLastConversation(id)
       },
       onRun: (id) => {
         currentRunId.value = id
@@ -608,7 +593,6 @@ async function send(payload: { text: string; files: File[] }) {
         conversationId = convo.id
         createdConversationId = convo.id
         activeId.value = convo.id
-        rememberLastConversation(convo.id)
         await loadConversations()
       }
       uploaded = await uploadAttachments(conversationId, files)
@@ -618,7 +602,6 @@ async function send(payload: { text: string; files: File[] }) {
       messages.value = messages.value.filter((m) => m.id !== optimisticUserId)
       if (createdConversationId !== null) {
         activeId.value = null
-        rememberLastConversation(null)
         await api.delete<void>(`/api/conversations/${createdConversationId}`)
           .catch(() => {})
         await loadConversations()
@@ -757,7 +740,6 @@ function scrollToBottom() {
 
 function logout() {
   auth.clear()
-  rememberLastConversation(null)
   router.replace(localePath('/login'))
 }
 
@@ -892,7 +874,6 @@ async function clearConversation() {
   try {
     await api.delete<void>(`/api/conversations/${activeId.value}`)
     activeId.value = null
-    rememberLastConversation(null)
     messages.value = []
     // Reset all transient composer state so nothing leaks into the next chat.
     queue.clear()

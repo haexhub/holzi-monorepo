@@ -94,8 +94,7 @@ describe('pages/chat/[id].vue', () => {
     expect(navigateMock).not.toHaveBeenCalled()
   })
 
-  it('toasts + redirects to / on 404, and clears the last-active pointer', async () => {
-    localStorage.setItem('holzi.lastConversationId', '42')
+  it('toasts + redirects to / on 404', async () => {
     const err = Object.assign(new Error('not found'), { statusCode: 404 })
     apiGet.mockRejectedValueOnce(err)
     const wrapper = mount(ChatIdPage)
@@ -103,7 +102,6 @@ describe('pages/chat/[id].vue', () => {
     expect(toastError).toHaveBeenCalledWith('pages.chat.notFound')
     // useLocalePath() may return '/en' under the EN locale — match either.
     expect(navigateMock).toHaveBeenLastCalledWith(expect.stringMatching(/^\/(en\/?)?$/), { replace: true })
-    expect(localStorage.getItem('holzi.lastConversationId')).toBeNull()
     // No hub mounted while invalid.
     expect(wrapper.find('[data-testid="chathub-stub"]').exists()).toBe(false)
   })

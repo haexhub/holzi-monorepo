@@ -4,12 +4,9 @@
 // id to <ChatHub>. The hub handles all chat state — this page is just
 // the URL adapter. `useHead({ title })` updates the browser tab so
 // multi-tab workflows don't all show "Neuer Chat".
-import { useLastConversationStore } from '~/stores/lastConversation'
-
 const route = useRoute()
 const api = useApi()
 const toast = useToast()
-const lastConv = useLastConversationStore()
 const localePath = useLocalePath()
 const { t } = useI18n({ useScope: 'global' })
 
@@ -55,9 +52,6 @@ async function validate(id: number | null) {
     }
     valid.value = false
     toast.error(t('pages.chat.notFound'))
-    // Drop the last-active pointer too — if it was pointing here we
-    // don't want `/` to bounce straight back.
-    lastConv.clear()
     await navigateTo(localePath('/'), { replace: true })
   }
 }
