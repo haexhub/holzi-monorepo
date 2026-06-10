@@ -1,8 +1,10 @@
 import { fileURLToPath } from 'node:url'
 import { dirname, resolve } from 'node:path'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const extensionOut = resolve(__dirname, '../extension/out/webview')
+const analyze = process.env.BUNDLE_ANALYZE === '1'
 
 export default defineNuxtConfig({
   extends: ['../../../packages/holzi-ui'],
@@ -33,4 +35,34 @@ export default defineNuxtConfig({
 
   // No dev-proxy here — webview talks directly to a backend URL provided
   // by the extension at runtime (via postMessage).
+
+  // Run `BUNDLE_ANALYZE=1 pnpm run generate` to produce bundle-stats.html
+  // (treemap) and bundle-stats.json (raw module sizes) next to nuxt.config.
+  // Attached only to the client build — Nuxt runs Vite twice (SSR shell +
+  // client) and a top-level vite.plugins entry would get overwritten by the
+  // smaller SSR pass.
+  hooks: analyze
+    ? {
+        'vite:extendConfig'(viteConfig, env) {
+          if (!env.isClient) return
+          viteConfig.plugins = viteConfig.plugins || []
+          viteConfig.plugins.push(
+            visualizer({
+              filename: resolve(__dirname, 'bundle-stats.html'),
+              template: 'treemap',
+              gzipSize: true,
+              brotliSize: true,
+              sourcemap: true,
+            }),
+            visualizer({
+              filename: resolve(__dirname, 'bundle-stats.json'),
+              template: 'raw-data',
+              gzipSize: true,
+              brotliSize: true,
+              sourcemap: true,
+            }),
+          )
+        },
+      }
+    : undefined,
 })
