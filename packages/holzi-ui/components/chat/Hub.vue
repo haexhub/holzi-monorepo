@@ -38,6 +38,8 @@ const props = withDefaults(
   { conversationId: null },
 )
 
+const emit = defineEmits<{ 'first-message': [text: string] }>()
+
 const auth = useAuthStore()
 const api = useApi()
 const llm = useLlmCredentials()
@@ -543,6 +545,10 @@ async function send(payload: { text: string; files: File[] }) {
   if (!text && !files.length) {
     // Pure slash command — override is set, nothing to send.
     return
+  }
+
+  if (messages.value.length === 0) {
+    emit('first-message', text)
   }
 
   if (isStreaming.value) {
