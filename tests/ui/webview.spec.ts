@@ -56,15 +56,17 @@ test.describe('VS Code webview shell', () => {
       // above will reach them — nothing else to wire.
     }, { host: baseUrl, token })
 
-    // The build emits a hash-mode router (#/…); hash mode means the
-    // initial path always rooted to '/'.
-    await page.goto(`${server.url}/`)
-
-    // Sanity: no CSP errors, no script-blocked / wasm-blocked errors.
+    // Attach the console error hook BEFORE navigation so we catch errors
+    // raised during the initial-load CSP / module evaluation pass — those
+    // are exactly the regressions this spec exists to catch.
     const consoleErrors: string[] = []
     page.on('console', (msg) => {
       if (msg.type() === 'error') consoleErrors.push(msg.text())
     })
+
+    // The build emits a hash-mode router (#/…); hash mode means the
+    // initial path always rooted to '/'.
+    await page.goto(`${server.url}/`)
 
     // Auth middleware in the SPA redirects to /login when no token is in the
     // store yet. Once the config postMessage seeds the token, it should land

@@ -17,9 +17,16 @@ import { makeClient, type ApiClient } from '../setup/client'
  *                              "claude-haiku-4-5" for anthropic.
  */
 const apiKey = process.env.HOLZI_TEST_LLM_API_KEY
-const provider = (process.env.HOLZI_TEST_LLM_PROVIDER ?? 'openrouter') as
-  | 'openrouter' | 'openai' | 'anthropic' | 'google'
-const defaultModelByProvider: Record<typeof provider, string> = {
+const allowedProviders = ['openrouter', 'openai', 'anthropic', 'google'] as const
+type Provider = typeof allowedProviders[number]
+const envProvider = process.env.HOLZI_TEST_LLM_PROVIDER
+if (envProvider !== undefined && !allowedProviders.includes(envProvider as Provider)) {
+  throw new Error(
+    `HOLZI_TEST_LLM_PROVIDER='${envProvider}' is not one of ${allowedProviders.join(', ')}`,
+  )
+}
+const provider: Provider = (envProvider as Provider) ?? 'openrouter'
+const defaultModelByProvider: Record<Provider, string> = {
   openrouter: 'openai/gpt-4o-mini',
   openai: 'gpt-4o-mini',
   anthropic: 'claude-haiku-4-5',
@@ -66,30 +73,36 @@ async function consumeSse(resp: Response): Promise<SseEvent[]> {
   const reader = resp.body!.getReader()
   const decoder = new TextDecoder()
   let buffer = ''
+
+  function parseBlock(block: string) {
+    const dataLines = block
+      .split('\n')
+      .filter(l => l.startsWith('data:'))
+      .map(l => l.slice(5).trim())
+    if (dataLines.length === 0) return
+    try {
+      const parsed = JSON.parse(dataLines.join('\n'))
+      events.push({ event: parsed.event ?? 'unknown', data: parsed })
+    } catch {
+      // Ignore non-JSON blocks (heartbeats / comments)
+    }
+  }
+
   while (true) {
     const { value, done } = await reader.read()
     if (done) break
-    buffer += decoder.decode(value, { stream: true })
-    // SSE blocks are separated by a blank line. Each block has lines of
-    // "event: X" / "data: Y". We only care about the data — every block in
-    // hermes' contract carries a JSON envelope with its own `event` field.
+    // SSE spec allows CRLF line endings; normalise to LF so the split below
+    // works regardless of which the server emits.
+    buffer += decoder.decode(value, { stream: true }).replace(/\r\n/g, '\n')
     let blockEnd: number
     while ((blockEnd = buffer.indexOf('\n\n')) !== -1) {
-      const block = buffer.slice(0, blockEnd)
+      parseBlock(buffer.slice(0, blockEnd))
       buffer = buffer.slice(blockEnd + 2)
-      const dataLines = block
-        .split('\n')
-        .filter(l => l.startsWith('data:'))
-        .map(l => l.slice(5).trim())
-      if (dataLines.length === 0) continue
-      try {
-        const parsed = JSON.parse(dataLines.join('\n'))
-        events.push({ event: parsed.event ?? 'unknown', data: parsed })
-      } catch {
-        // Ignore non-JSON blocks (heartbeats / comments)
-      }
     }
   }
+  // Flush any final block the server closed without a trailing blank line —
+  // we'd otherwise drop the last event (often the `done`).
+  if (buffer.trim()) parseBlock(buffer)
   return events
 }
 

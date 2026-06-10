@@ -18,7 +18,11 @@ its own fresh hermes container on a random port so suites are isolated.
 
 - **podman-compose** on PATH (default). Override with
   `HOLZI_TEST_COMPOSE_CMD='docker compose'` if you use Docker.
-- **hermes-server image** built locally — `cd ../../Holzi && podman build -t localhost/hermes-server:dev .`
+- **hermes-server image** built locally as `localhost/hermes-server:dev`. The
+  backend lives in a separate repo ([haexhub/Holzi](https://github.com/haexhub/Holzi)) —
+  clone it somewhere convenient and `podman build -t localhost/hermes-server:dev .`
+  from its root. (If you check it out as a sibling of this monorepo, `cd ../../Holzi`
+  from `tests/` lands in the right place.)
 - **Built apps for UI tests:**
   - `pnpm --filter @holzi/webview run generate`
   - `pnpm --filter @holzi/frontend run generate`
@@ -71,7 +75,17 @@ DB, which dies with the container.
 - Conversation persists with both user and assistant messages.
 
 **`unit/markdown.test.ts` (16 tests)**
-- Pure-function tests of `renderMarkdown` from `@holzi/ui`. Covers: HTML escaping, DOMPurify sanitisation, headings/paragraphs/linkify/breaks, code blocks via Shiki (JS/TS/Python/unknown-language fallback), copy-button wrapper + `data-code` attribute, mermaid fence extraction (NOT run through Shiki), KaTeX inline + block math, plain `$` not eaten as math, shiki CSS-var inline styles surviving DOMPurify.
+
+Pure-function tests of `renderMarkdown` from `@holzi/ui`. Covers:
+
+- HTML escaping (`html: false`) and DOMPurify sanitisation
+- headings, paragraphs, linkify, breaks
+- code blocks via Shiki: JS, TS, Python; unknown-language fallback to plaintext
+- copy-button wrapper + `data-code` attribute carrying the raw source
+- mermaid fence extraction (NOT run through Shiki)
+- KaTeX inline + block math; plain `$` not eaten as math
+- shiki's `--shiki-*` CSS-var inline styles surviving DOMPurify
+- `on*` event handlers in raw HTML stripped end-to-end
 
 **`ui/webview.spec.ts` (1 test)**
 - Webview boots into Nuxt with mocked `acquireVsCodeApi`; CSP doesn't block module / WASM; Tailwind utilities are present (catches the regressions from the session that built this suite).

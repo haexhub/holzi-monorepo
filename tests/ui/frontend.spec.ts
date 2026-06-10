@@ -40,17 +40,21 @@ test.describe('web frontend shell', () => {
       const headers = { ...route.request().headers() }
       // Strip host so undici doesn't reject mismatching authority.
       delete headers.host
+      // Drop accept-encoding so undici returns a decoded body that we can
+      // forward 1:1 in route.fulfill — otherwise the (now-decoded) body
+      // mismatches the stale content-encoding/content-length headers.
+      delete headers['accept-encoding']
       const resp = await fetch(target, {
         method: route.request().method(),
         headers,
         body: route.request().postData() ?? undefined,
       })
       const body = Buffer.from(await resp.arrayBuffer())
-      await route.fulfill({
-        status: resp.status,
-        headers: Object.fromEntries(resp.headers.entries()),
-        body,
-      })
+      const respHeaders = Object.fromEntries(resp.headers.entries())
+      delete respHeaders['content-encoding']
+      delete respHeaders['content-length']
+      delete respHeaders['transfer-encoding']
+      await route.fulfill({ status: resp.status, headers: respHeaders, body })
     })
 
     await page.goto(`${server.url}/`)

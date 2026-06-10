@@ -124,10 +124,24 @@ describe('renderMarkdown — KaTeX math', () => {
 })
 
 describe('renderMarkdown — sanitization edge cases', () => {
-  test('removes onerror / on* event handlers', async () => {
-    const html = await renderMarkdown('![x](https://example.com/x.png "title")')
-    expect(html).not.toMatch(/onerror=/i)
-    expect(html).not.toMatch(/onclick=/i)
+  test('no live element ends up with on* event handlers from raw HTML in source', async () => {
+    // The source contains explicit handlers. Either markdown-it (html:false)
+    // escapes the raw HTML into text, or DOMPurify strips the attributes —
+    // what matters is the final DOM has no element with an on-* attribute,
+    // not whether the literal substring 'onerror=' appears (it can survive
+    // as inert text inside <p>).
+    const html = await renderMarkdown(
+      'before\n\n<img src="https://example.com/x.png" onerror="alert(1)" onclick="boom()">\n\nafter',
+    )
+    const container = document.createElement('div')
+    container.innerHTML = html
+    for (const el of Array.from(container.querySelectorAll('*'))) {
+      for (const attr of Array.from(el.attributes)) {
+        expect(attr.name).not.toMatch(/^on/i)
+      }
+    }
+    // And no real <img> tag — only its escaped textual representation.
+    expect(container.querySelector('img')).toBeNull()
   })
 
   test('keeps inline shiki color CSS-vars (not stripped by DOMPurify)', async () => {

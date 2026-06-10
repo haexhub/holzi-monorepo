@@ -12,7 +12,9 @@
 services:
   hermes:
     image: localhost/hermes-server:dev
-    container_name: holzi-test-hermes
+    # No container_name — the test runner picks a unique compose project per
+    # invocation (`-p`), so containers are namespaced by that. A fixed name
+    # would defeat parallel runs.
     environment:
       HERMES_AUTH_TOKEN: ${HOLZI_TEST_AUTH_TOKEN:?set by test runner}
       # In-container DB path. Ephemeral — gone when the container dies.

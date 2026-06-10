@@ -1,5 +1,5 @@
 import { createReadStream, statSync } from 'node:fs'
-import { extname, join, normalize, resolve } from 'node:path'
+import { extname, join, normalize, relative, resolve } from 'node:path'
 import { createServer, type Server } from 'node:http'
 import { AddressInfo } from 'node:net'
 
@@ -34,11 +34,22 @@ export async function serveStatic(rootDir: string): Promise<StaticHandle> {
   const root = resolve(rootDir)
   const server: Server = createServer((req, res) => {
     const reqPath = (req.url ?? '/').split('?')[0]!
-    // Strip leading slash, normalize, prevent path traversal
-    let rel = normalize(decodeURIComponent(reqPath)).replace(/^\/+/, '')
+    // decodeURIComponent throws URIError on malformed sequences; treat that
+    // as a bad request rather than crashing the test server.
+    let decoded: string
+    try {
+      decoded = decodeURIComponent(reqPath)
+    } catch {
+      res.writeHead(400).end('bad request')
+      return
+    }
+    let rel = normalize(decoded).replace(/^\/+/, '')
     if (rel === '' || rel === '/') rel = 'index.html'
-    let file = join(root, rel)
-    if (!file.startsWith(root)) {
+    let file = resolve(root, rel)
+    // Use path.relative + ../ check rather than startsWith — `startsWith`
+    // accepts prefix-match escapes (e.g. root=/foo, requested=/foobar).
+    const rel2 = relative(root, file)
+    if (rel2.startsWith('..') || rel2 === '..') {
       res.writeHead(403).end('forbidden')
       return
     }

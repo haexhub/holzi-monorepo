@@ -22,9 +22,13 @@ export interface HermesHandle {
   stop: () => Promise<void>
 }
 
-function compose(args: string[], env: NodeJS.ProcessEnv) {
+function compose(project: string, args: string[], env: NodeJS.ProcessEnv) {
   const [cmd, ...rest] = COMPOSE_CMD
-  return execFile(cmd, [...rest, '-f', composeFile, ...args], {
+  // `-p` scopes the compose project so each startHermes() invocation owns its
+  // own set of containers — otherwise `down -v` would tear down peers that
+  // happen to be running the same compose file (e.g. another test suite in
+  // parallel, or a stale developer-started one).
+  return execFile(cmd, [...rest, '-p', project, '-f', composeFile, ...args], {
     env: { ...process.env, ...env },
     timeout: 120_000,
   })
@@ -57,24 +61,27 @@ export async function startHermes(): Promise<HermesHandle> {
   const secretKey = randomBytes(32).toString('hex')
   // Random port in 18000–18999 to allow parallel suites.
   const port = 18000 + Math.floor(Math.random() * 1000)
+  // Unique compose project per invocation so down -v only tears down THIS
+  // container, never a peer's. Also avoids container_name collisions when
+  // two suites try to start at once.
+  const project = `holzi-test-${randomBytes(6).toString('hex')}`
   const env = {
     HOLZI_TEST_AUTH_TOKEN: authToken,
     HOLZI_TEST_SECRET_KEY: secretKey,
     HOLZI_TEST_HERMES_PORT: String(port),
   }
-  // Tear down anything previous with the same project, then bring up fresh.
-  // `down -v` ensures the tmpfs volume is gone too.
-  await compose(['down', '-v', '--remove-orphans'], env).catch(() => {})
-  await compose(['up', '-d'], env)
+  await compose(project, ['up', '-d'], env)
 
   const baseUrl = `http://localhost:${port}`
   const ctrl = new AbortController()
   try {
     await waitForHealthy(baseUrl, ctrl.signal)
   } catch (err) {
-    // Capture logs on startup failure — otherwise you get "never became
-    // healthy" with nothing to debug.
-    const { stdout } = await compose(['logs', '--no-color', 'hermes'], env).catch(() => ({ stdout: '(no logs)' }))
+    // Capture logs + tear the half-started stack down before rethrowing —
+    // otherwise an unhealthy hermes leaves an orphaned container behind.
+    const { stdout } = await compose(project, ['logs', '--no-color', 'hermes'], env)
+      .catch(() => ({ stdout: '(no logs)' }))
+    await compose(project, ['down', '-v', '--remove-orphans'], env).catch(() => {})
     throw new Error(`${(err as Error).message}\n--- hermes logs ---\n${stdout}`)
   }
 
@@ -84,7 +91,7 @@ export async function startHermes(): Promise<HermesHandle> {
     secretKey,
     stop: async () => {
       ctrl.abort()
-      await compose(['down', '-v', '--remove-orphans'], env).catch(() => {})
+      await compose(project, ['down', '-v', '--remove-orphans'], env).catch(() => {})
     },
   }
 }
