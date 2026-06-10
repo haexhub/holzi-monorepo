@@ -1,6 +1,18 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Scan this layer's own components for utility classes. Without these,
+   apps that consume the layer from outside its directory (e.g. the VS Code
+   webview, whose Vite root is apps/vscode/webview) don't detect the classes
+   used here, so Tailwind generates no utilities for them. Paths are relative
+   to this CSS file. */
+@source "../../components";
+@source "../../layouts";
+@source "../../pages";
+@source "../../composables";
+@source "../../lib";
+@source "../../utils";
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
