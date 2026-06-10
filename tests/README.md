@@ -8,10 +8,11 @@ its own fresh hermes container on a random port so suites are isolated.
 
 | Path | What | Cost | Runner |
 |------|------|------|--------|
+| `unit/` | Pure-function tests (markdown renderer: Shiki, KaTeX, Mermaid, DOMPurify) | free | vitest |
 | `api/` | Backend HTTP contracts (REST, CORS, auth, WS protocol) | free | vitest |
 | `agent/` | End-to-end agent flow with a real (cheap) LLM | tokens | vitest |
-| `ui/` | Browser flows for the Web frontend + VS Code webview | free | playwright |
-| `setup/` | Shared helpers: `startHermes()`, typed API client, static server | — | — |
+| `ui/` | Browser flows (webview shell, frontend login, settings cards, mermaid SVG) | free | playwright |
+| `setup/` | Shared helpers: `startHermes()`, typed API client, static server, env loader | — | — |
 
 ## Requirements
 
@@ -26,10 +27,11 @@ its own fresh hermes container on a random port so suites are isolated.
 ## Run
 
 ```bash
-pnpm run test:api        # 18 API contract tests, ~21s
+pnpm run test:unit       # 16 markdown-renderer tests, ~1s
+pnpm run test:api        # 18 API contract tests, ~20s
 pnpm run test:agent      # 1 agent test, skipped unless LLM key set
-pnpm run test:ui         # 2 Playwright specs, ~15s
-pnpm test                # all of the above
+pnpm run test:ui         # 4 Playwright specs, ~22s
+pnpm test                # all of the above (~50s end-to-end)
 ```
 
 ## Agent tests with a real LLM
@@ -68,11 +70,20 @@ DB, which dies with the container.
 - POST `/api/chat` with a trivial prompt, parse SSE: `session` → `run` → `text*` → `done`.
 - Conversation persists with both user and assistant messages.
 
+**`unit/markdown.test.ts` (16 tests)**
+- Pure-function tests of `renderMarkdown` from `@holzi/ui`. Covers: HTML escaping, DOMPurify sanitisation, headings/paragraphs/linkify/breaks, code blocks via Shiki (JS/TS/Python/unknown-language fallback), copy-button wrapper + `data-code` attribute, mermaid fence extraction (NOT run through Shiki), KaTeX inline + block math, plain `$` not eaten as math, shiki CSS-var inline styles surviving DOMPurify.
+
 **`ui/webview.spec.ts` (1 test)**
 - Webview boots into Nuxt with mocked `acquireVsCodeApi`; CSP doesn't block module / WASM; Tailwind utilities are present (catches the regressions from the session that built this suite).
 
 **`ui/frontend.spec.ts` (1 test)**
 - Web frontend's auth-middleware redirect to `/login`, token submission against the test backend, post-login navigation away from `/login`.
+
+**`ui/settings-cards.spec.ts` (1 test)**
+- LLM credentials settings page: seed an inactive credential → page renders the row → click Activate → row toggles to active (verified against `/api/llm/credentials`, not just DOM).
+
+**`ui/mermaid-render.spec.ts` (1 test)**
+- The `.mermaid-block` fallback structure that `renderMarkdown` emits is actually upgradeable: mermaid lib is loaded in a real browser, runs the upgrade routine `RenderedMarkdown.vue` uses, and produces an inline SVG containing the source's text labels.
 
 ## Adding a test
 
