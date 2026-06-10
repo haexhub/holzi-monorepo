@@ -76,6 +76,20 @@ export function activate(context: vscode.ExtensionContext): void {
         await config.update('host', value.replace(/\/$/, ''), vscode.ConfigurationTarget.Global)
       }
     }),
+    vscode.commands.registerCommand('holzi.settings', async () => {
+      const token = await getToken(context)
+      const pick = await vscode.window.showQuickPick(
+        [
+          { label: '$(server) Configure Server', command: 'holzi.configure' },
+          {
+            label: token.length > 0 ? '$(key) Change Token' : '$(key) Sign In',
+            command: 'holzi.login',
+          },
+        ],
+        { title: 'Holzi: Settings', placeHolder: 'Choose what to configure' },
+      )
+      if (pick) await vscode.commands.executeCommand(pick.command)
+    }),
     vscode.commands.registerCommand('holzi.login', async () => {
       const token = await vscode.window.showInputBox({
         title: 'Holzi: Sign In',

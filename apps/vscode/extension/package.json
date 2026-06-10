@@ -44,6 +44,11 @@
         "title": "Holzi: Sign In"
       },
       {
+        "command": "holzi.settings",
+        "title": "Holzi: Settings",
+        "icon": "$(gear)"
+      },
+      {
         "command": "holzi.openSession",
         "title": "Holzi: Open Session"
       },
@@ -99,6 +104,11 @@
           "command": "holzi.refreshSessions",
           "when": "view == holzi.sessions",
           "group": "navigation@2"
+        },
+        {
+          "command": "holzi.settings",
+          "when": "view == holzi.sessions",
+          "group": "navigation@3"
         }
       ],
       "view/item/context": [
