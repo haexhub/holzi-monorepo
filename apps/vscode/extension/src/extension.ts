@@ -1,13 +1,67 @@
 import * as vscode from 'vscode'
 import { HolziPanel } from './HolziPanel'
+import { SessionsProvider, type SessionItem } from './SessionsProvider'
+import { deleteConversation } from './api'
+import { getToken } from './config'
 
 export function activate(context: vscode.ExtensionContext): void {
   const logger = vscode.window.createOutputChannel('Holzi')
   context.subscriptions.push(logger)
 
+  const sessionsProvider = new SessionsProvider(context, logger)
+  context.subscriptions.push(
+    vscode.window.registerTreeDataProvider('holzi.sessions', sessionsProvider),
+  )
+
+  // Keep the `holzi.authenticated` when-context in sync with the stored token.
+  async function syncAuthContext(): Promise<void> {
+    const token = await getToken(context)
+    await vscode.commands.executeCommand('setContext', 'holzi.authenticated', token.length > 0)
+    sessionsProvider.refresh()
+  }
+  void syncAuthContext()
+  context.subscriptions.push(
+    context.secrets.onDidChange((e) => {
+      if (e.key === 'holzi.token') void syncAuthContext()
+    }),
+  )
+
   context.subscriptions.push(
     vscode.commands.registerCommand('holzi.openChat', async () => {
-      await HolziPanel.createOrShow(context, logger)
+      await HolziPanel.createOrShow(context, logger, {
+        onFirstMessage: () => sessionsProvider.refresh(),
+      })
+    }),
+    vscode.commands.registerCommand('holzi.openSession', async (id: number) => {
+      const existing = HolziPanel.findByConversationId(id)
+      if (existing) {
+        existing.reveal()
+        return
+      }
+      await HolziPanel.createOrShow(context, logger, {
+        conversationId: id,
+        onFirstMessage: () => sessionsProvider.refresh(),
+      })
+    }),
+    vscode.commands.registerCommand('holzi.refreshSessions', () => {
+      sessionsProvider.refresh()
+    }),
+    vscode.commands.registerCommand('holzi.deleteSession', async (item: SessionItem) => {
+      const confirm = await vscode.window.showWarningMessage(
+        `Delete "${String(item.label)}"?`,
+        { modal: true },
+        'Delete',
+      )
+      if (confirm !== 'Delete') return
+      try {
+        await deleteConversation(context, item.sessionId)
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err)
+        logger.appendLine(`[holzi] delete failed: ${msg}`)
+        vscode.window.showErrorMessage(`Holzi: could not delete session (${msg})`)
+        return
+      }
+      sessionsProvider.refresh()
     }),
     vscode.commands.registerCommand('holzi.configure', async () => {
       const config = vscode.workspace.getConfiguration('holzi')
