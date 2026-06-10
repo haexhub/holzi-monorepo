@@ -172,14 +172,17 @@ export function formatRelative(unixSeconds: number): string {
 }
 
 export class SessionItem extends vscode.TreeItem {
-  constructor(readonly id: number, label: string, description: string) {
+  // NOTE: field is `sessionId`, not `id` — `vscode.TreeItem` already declares
+  // an inherited `id?: string`, so a `readonly id: number` parameter property
+  // collides (TS2415). Consumers use `item.sessionId`.
+  constructor(readonly sessionId: number, label: string, description: string) {
     super(label, vscode.TreeItemCollapsibleState.None)
     this.description = description
     this.contextValue = 'session'
     this.command = {
       command: 'holzi.openSession',
       title: 'Open Session',
-      arguments: [id],
+      arguments: [sessionId],
     }
   }
 }
@@ -643,7 +646,7 @@ export function activate(context: vscode.ExtensionContext): void {
       )
       if (confirm !== 'Delete') return
       try {
-        await deleteConversation(context, item.id)
+        await deleteConversation(context, item.sessionId)
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err)
         logger.appendLine(`[holzi] delete failed: ${msg}`)
