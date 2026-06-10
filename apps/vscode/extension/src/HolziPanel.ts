@@ -121,6 +121,10 @@ export class HolziPanel {
     // Add nonce to all <script> tags
     html = html.replace(/<script(\s|>)/g, `<script nonce="${nonce}"$1`)
 
+    // Add nonce to <link rel="modulepreload"> — CSP checks these against
+    // script-src, and our policy has no host source (nonce-only).
+    html = html.replace(/<link\s+([^>]*\brel="modulepreload"[^>]*)>/g, `<link nonce="${nonce}" $1>`)
+
     // CSP — strip any existing CSP meta, then inject ours
     html = html.replace(/<meta http-equiv="Content-Security-Policy"[^>]*>/g, '')
 
@@ -130,7 +134,7 @@ export class HolziPanel {
     const csp = [
       `default-src 'none'`,
       `style-src ${webview.cspSource} 'unsafe-inline'`,
-      `script-src 'nonce-${nonce}'`,
+      `script-src 'nonce-${nonce}' 'strict-dynamic' 'wasm-unsafe-eval'`,
       `font-src ${webview.cspSource} data:`,
       `img-src ${webview.cspSource} data: https:`,
       `connect-src https: wss:`,
