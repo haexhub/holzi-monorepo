@@ -1,36 +1,82 @@
 # Holzi end-to-end tests
 
 Tests the Holzi stack against a real, containerized Hermes backend — no
-mocks, no stubs. Each `*.test.ts` file boots its own fresh hermes container
-(SQLite on tmpfs, random auth token, random port) so suites are isolated.
+mocks, no stubs. Each `*.test.ts` (vitest) / `*.spec.ts` (Playwright) boots
+its own fresh hermes container on a random port so suites are isolated.
 
 ## Layout
 
-| Path | What | Runner |
-|------|------|--------|
-| `api/` | Backend HTTP contracts (REST, CORS, auth gating) — no LLM. | vitest |
-| `agent/` | End-to-end agent flow with a real (cheap) LLM. | vitest |
-| `ui/` | Browser-driven flows for the Web app + VS Code webview. | playwright |
-| `setup/` | Shared helpers: `startHermes()`, typed API client. | — |
+| Path | What | Cost | Runner |
+|------|------|------|--------|
+| `api/` | Backend HTTP contracts (REST, CORS, auth, WS protocol) | free | vitest |
+| `agent/` | End-to-end agent flow with a real (cheap) LLM | tokens | vitest |
+| `ui/` | Browser flows for the Web frontend + VS Code webview | free | playwright |
+| `setup/` | Shared helpers: `startHermes()`, typed API client, static server | — | — |
 
 ## Requirements
 
-- **podman-compose** on PATH (default; override with `HOLZI_TEST_COMPOSE_CMD='docker compose'`).
+- **podman-compose** on PATH (default). Override with
+  `HOLZI_TEST_COMPOSE_CMD='docker compose'` if you use Docker.
 - **hermes-server image** built locally — `cd ../../Holzi && podman build -t localhost/hermes-server:dev .`
-- **Agent tests** additionally need an LLM API key in `.env.test` (gitignored).
+- **Built apps for UI tests:**
+  - `pnpm --filter @holzi/webview run generate`
+  - `pnpm --filter @holzi/frontend run generate`
+- **Agent tests** additionally need `HOLZI_TEST_LLM_API_KEY` (skipped without it).
 
 ## Run
 
 ```bash
-pnpm run test:api        # API contracts, no LLM
-pnpm run test:agent      # Agent flow with real LLM
-pnpm run test:ui         # Playwright UI tests
+pnpm run test:api        # 18 API contract tests, ~21s
+pnpm run test:agent      # 1 agent test, skipped unless LLM key set
+pnpm run test:ui         # 2 Playwright specs, ~15s
 pnpm test                # all of the above
 ```
 
+## Agent tests with a real LLM
+
+```bash
+# Cheapest path: an OpenRouter key, defaulting to openai/gpt-4o-mini.
+HOLZI_TEST_LLM_API_KEY=sk-or-... pnpm run test:agent
+
+# Override provider / model:
+HOLZI_TEST_LLM_API_KEY=sk-... \
+HOLZI_TEST_LLM_PROVIDER=openai \
+HOLZI_TEST_LLM_MODEL=gpt-4o-mini \
+  pnpm run test:agent
+```
+
+The agent test seeds the credential into the throwaway hermes via the
+public `/api/llm/credentials` endpoint, so the container never receives
+your key via env — it only sees the AES-encrypted blob in its ephemeral
+DB, which dies with the container.
+
+## What each test layer pins
+
+**`api/health-and-auth.test.ts` (6 tests)**
+- `/healthz` is public; `/api/*` 401s without / with wrong token, 200s with valid token.
+- OPTIONS preflight from `vscode-webview://*` origins returns CORS headers; from foreign origins does not.
+
+**`api/conversations.test.ts` (8 tests)**
+- `/api/conversations`, `/api/llm/credentials`, `/api/personas`, `/api/skills` shapes (bare arrays vs `{ items: [] }` envelopes).
+- 404 on unknown ids for GET/PATCH/DELETE — the contract the extension depends on.
+
+**`api/ws-protocol.test.ts` (4 tests)**
+- `/ws/agent` close-code-4001 without / with wrong token.
+- Header bearer + `?token=` query param both accepted.
+
+**`agent/basic-chat.test.ts` (1 test, LLM-gated)**
+- POST `/api/chat` with a trivial prompt, parse SSE: `session` → `run` → `text*` → `done`.
+- Conversation persists with both user and assistant messages.
+
+**`ui/webview.spec.ts` (1 test)**
+- Webview boots into Nuxt with mocked `acquireVsCodeApi`; CSP doesn't block module / WASM; Tailwind utilities are present (catches the regressions from the session that built this suite).
+
+**`ui/frontend.spec.ts` (1 test)**
+- Web frontend's auth-middleware redirect to `/login`, token submission against the test backend, post-login navigation away from `/login`.
+
 ## Adding a test
 
-Most tests follow the pattern in `api/conversations.test.ts`:
+API contract pattern (most tests):
 
 ```ts
 let hermes: HermesHandle
@@ -49,5 +95,5 @@ test('something', async () => {
 })
 ```
 
-`startHermes()` returns a fresh, isolated backend. The handle's `stop()` is
-idempotent — call it in `afterAll`. Random ports let suites run in parallel.
+UI pattern: see `ui/webview.spec.ts` (postMessage-mocked) or
+`ui/frontend.spec.ts` (page.route forwarder).
