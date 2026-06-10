@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { test, expect } from '@playwright/test'
 import { startHermes, type HermesHandle } from '../setup/hermes'
 import { serveStatic, type StaticHandle } from '../setup/static-server'
+import { setupApiForwarder } from '../setup/api-forwarder'
 
 const here = resolve(fileURLToPath(import.meta.url), '..')
 const frontendDist = resolve(here, '..', '..', 'apps', 'frontend', '.output', 'public')
@@ -32,30 +33,9 @@ test.describe('web frontend shell', () => {
   test('renders login screen, accepts valid token, lands on home', async ({ page }) => {
     // The frontend lives on http://127.0.0.1:RANDOM/. Its /api/* calls are
     // same-origin (the login does `fetch('/api/ping')`). In production nginx
-    // proxies these to hermes; in dev a Nitro devProxy does. Here we let
-    // Playwright intercept and forward to the test container.
-    await page.route('**/api/**', async (route) => {
-      const url = new URL(route.request().url())
-      const target = `${hermes.baseUrl}${url.pathname}${url.search}`
-      const headers = { ...route.request().headers() }
-      // Strip host so undici doesn't reject mismatching authority.
-      delete headers.host
-      // Drop accept-encoding so undici returns a decoded body that we can
-      // forward 1:1 in route.fulfill — otherwise the (now-decoded) body
-      // mismatches the stale content-encoding/content-length headers.
-      delete headers['accept-encoding']
-      const resp = await fetch(target, {
-        method: route.request().method(),
-        headers,
-        body: route.request().postData() ?? undefined,
-      })
-      const body = Buffer.from(await resp.arrayBuffer())
-      const respHeaders = Object.fromEntries(resp.headers.entries())
-      delete respHeaders['content-encoding']
-      delete respHeaders['content-length']
-      delete respHeaders['transfer-encoding']
-      await route.fulfill({ status: resp.status, headers: respHeaders, body })
-    })
+    // proxies these to hermes; in dev a Nitro devProxy does. Here we
+    // intercept and forward to the test container.
+    await setupApiForwarder(page, hermes.baseUrl)
 
     await page.goto(`${server.url}/`)
 

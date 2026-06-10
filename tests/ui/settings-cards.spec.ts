@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { test, expect } from '@playwright/test'
 import { startHermes, type HermesHandle } from '../setup/hermes'
 import { serveStatic, type StaticHandle } from '../setup/static-server'
+import { setupApiForwarder } from '../setup/api-forwarder'
 import { makeClient } from '../setup/client'
 
 const here = resolve(fileURLToPath(import.meta.url), '..')
@@ -23,33 +24,6 @@ test.afterAll(async () => {
   await server?.stop()
   await hermes?.stop()
 })
-
-/** Forward /api/* requests from the served bundle to the test hermes. */
-function setupApiForwarder(page: import('@playwright/test').Page, baseUrl: string) {
-  return page.route('**/api/**', async (route) => {
-    const url = new URL(route.request().url())
-    const target = `${baseUrl}${url.pathname}${url.search}`
-    const headers = { ...route.request().headers() }
-    delete headers.host
-    // Strip accept-encoding to keep the body decodable for route.fulfill.
-    delete headers['accept-encoding']
-    try {
-      const resp = await fetch(target, {
-        method: route.request().method(),
-        headers,
-        body: route.request().postData() ?? undefined,
-      })
-      const body = Buffer.from(await resp.arrayBuffer())
-      const respHeaders = Object.fromEntries(resp.headers.entries())
-      delete respHeaders['content-encoding']
-      delete respHeaders['content-length']
-      delete respHeaders['transfer-encoding']
-      await route.fulfill({ status: resp.status, headers: respHeaders, body })
-    } catch {
-      await route.abort()
-    }
-  })
-}
 
 test.describe('settings — LLM credential card', () => {
   test.skip(!built, 'frontend not built — run `pnpm --filter @holzi/frontend run generate`')

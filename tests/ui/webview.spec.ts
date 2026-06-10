@@ -39,7 +39,6 @@ test.describe('VS Code webview shell', () => {
     const baseUrl = hermes.baseUrl
     const token = hermes.authToken
     await page.addInitScript(({ host, token }) => {
-      const listeners = new Set<(d: unknown) => void>()
       ;(window as any).acquireVsCodeApi = () => ({
         postMessage(msg: unknown) {
           const m = msg as { type?: string }
@@ -73,14 +72,22 @@ test.describe('VS Code webview shell', () => {
     // on the chat shell. Either way, the page should NOT stay blank.
     await expect(page.locator('#__nuxt')).not.toBeEmpty({ timeout: 15_000 })
 
-    // Tailwind utilities must have been generated — verify a known visible
-    // text element gets non-zero computed font size and the body has the
-    // expected background-color set via CSS variables (catches the
-    // "@source missing → no utilities" regression we fixed in this session).
-    const bodyFontSize = await page.evaluate(() =>
-      Number.parseFloat(getComputedStyle(document.body).fontSize),
-    )
-    expect(bodyFontSize).toBeGreaterThan(0)
+    // Tailwind utilities must have been generated. Inject a probe div with a
+    // known utility class and check the computed style actually reflects the
+    // utility — without Tailwind a <div> stays `display: block`, with
+    // Tailwind's `.flex` it becomes `display: flex`. Catches the
+    // "@source missing → no utilities" regression specifically.
+    const flexDisplay = await page.evaluate(() => {
+      const probe = document.createElement('div')
+      probe.className = 'flex'
+      probe.style.position = 'absolute'
+      probe.style.visibility = 'hidden'
+      document.body.appendChild(probe)
+      const display = getComputedStyle(probe).display
+      probe.remove()
+      return display
+    })
+    expect(flexDisplay).toBe('flex')
 
     // Surface any CSP / load errors. We don't fail on every warn — only on
     // outright errors that would indicate the page broke.
