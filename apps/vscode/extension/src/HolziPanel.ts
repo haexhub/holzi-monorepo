@@ -6,7 +6,7 @@ import { getToken, getHost } from './config'
 const VIEW_TYPE = 'holziChat'
 
 export class HolziPanel {
-  private static current: HolziPanel | undefined
+  private static instances = new Set<HolziPanel>()
   private readonly panel: vscode.WebviewPanel
   private readonly context: vscode.ExtensionContext
   private readonly logger: vscode.OutputChannel
@@ -15,10 +15,6 @@ export class HolziPanel {
     context: vscode.ExtensionContext,
     logger: vscode.OutputChannel,
   ): Promise<void> {
-    if (HolziPanel.current) {
-      HolziPanel.current.panel.reveal()
-      return
-    }
     const column = vscode.window.activeTextEditor
       ? vscode.ViewColumn.Beside
       : vscode.ViewColumn.One
@@ -30,7 +26,7 @@ export class HolziPanel {
     })
     panel.iconPath = vscode.Uri.joinPath(context.extensionUri, 'images', 'icon.png')
 
-    HolziPanel.current = new HolziPanel(panel, context, logger)
+    HolziPanel.instances.add(new HolziPanel(panel, context, logger))
   }
 
   private constructor(
@@ -45,7 +41,7 @@ export class HolziPanel {
     this.panel.webview.html = this._buildHtml(context)
     this.panel.webview.onDidReceiveMessage((msg) => this._handleWebviewMessage(msg))
     this.panel.onDidDispose(() => {
-      HolziPanel.current = undefined
+      HolziPanel.instances.delete(this)
     })
   }
 
